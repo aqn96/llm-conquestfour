@@ -138,3 +138,6 @@ instance/
 dmypy.json
 .pyre/
 __pypackages__/
+venv/
+__pycache__/
+*.pyc
