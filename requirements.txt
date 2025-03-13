@@ -1,0 +1,19 @@
+# Core dependencies
+torch>=2.0.0  # For ML model operations
+transformers>=4.30.0  # Hugging Face Transformers for Mistral-7B
+PyQt6>=6.4.0  # UI Framework
+jinja2>=3.1.2  # Template system
+lark>=1.1.5  # Parsing
+
+# Game Logic & AI
+z3-solver>=4.12.1  # For state validation
+psutil>=5.9.5  # For system monitoring (CPU temperature, etc.)
+
+# Edge Optimization 
+
+# Development tools
+pyinstaller>=5.11.0  # For creating standalone executables
+pytest>=7.3.1  # For testing
+
+# Optional - for Jupyter notebooks if using for prototyping
+jupyter>=1.0.0
