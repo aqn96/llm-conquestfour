@@ -1,0 +1,12 @@
+{% if move_count < 5 %}
+Quantum initialization sequence began. The {{ faction }} calculating optimal trajectory.
+{% elif move_count < 15 %}
+Neural network analysis suggests the {{ faction }} should {{ action }} in Sector {{ next_column }}.
+{% if last_move %}
+Previous action: {{ last_move.faction }} deployed a quantum token in sector {{ last_move.column }}, altering the probability field.
+{% endif %}
+{% else %}
+Quantum field instability critical. The {{ faction }} must execute precise particle placement to prevent dimensional collapse.
+{% endif %}
+
+Calculate the optimal strategic move for the {{ faction }} considering both tactical advantage and narrative momentum.

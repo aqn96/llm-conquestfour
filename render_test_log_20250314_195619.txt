@@ -1,0 +1,132 @@
+[19:56:22] TEST: Starting enhanced rendering test sequence
+[19:56:22] TEST: Logging to: render_test_log_20250314_195619.txt
+[19:56:24] TEST: Step 1: Starting game
+[19:56:24] DEBUG: Game container SHOW event detected
+[19:56:26] TEST: Step 2: Applying special rendering flags
+[19:56:26] DEBUG: Renderer has force_update_all_cells method: True
+[19:56:26] DEBUG: Renderer has returned_from_title flag: True
+[19:56:26] DEBUG: Applying additional rendering fixes
+[19:56:28] TEST: Step 3: Making multiple moves
+[19:56:28] DEBUG: Checking piece visibility: after first move
+[19:56:28] DEBUG: Expected board state:
+[19:56:28] DEBUG: Expected 1 pieces: [(5, 3, 1)]
+[19:56:28] DEBUG: Visible pieces: 42 at positions [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 0), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (5, 0), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6)]
+[19:56:28] DEBUG: Capturing cell states: after_first_move
+[19:56:28] DEBUG: Captured 42 non-empty cells for after_first_move
+[19:56:30] TEST: Made second move in column 4
+[19:56:30] DEBUG: Capturing cell states: after_second_move
+[19:56:30] DEBUG: Captured 42 non-empty cells for after_second_move
+[19:56:32] TEST: Made third move in column 5
+[19:56:32] DEBUG: Capturing cell states: after_third_move
+[19:56:32] DEBUG: Captured 42 non-empty cells for after_third_move
+[19:56:34] TEST: Step 6: Checking board visibility before returning to title
+[19:56:34] DEBUG: Checking piece visibility: before returning to title
+[19:56:34] DEBUG: Expected board state:
+[19:56:34] DEBUG: Expected 6 pieces: [(3, 3, 2), (4, 3, 2), (5, 0, 2), (5, 3, 1), (5, 4, 1), (5, 5, 1)]
+[19:56:34] DEBUG: Visible pieces: 42 at positions [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 0), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (5, 0), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6)]
+[19:56:34] TEST: Test PAUSED
+[19:56:49] TEST: Step 7: Returning to title screen
+[19:56:49] DEBUG: UI component check: before_title_return
+[19:56:49] DEBUG: Game container exists: True
+[19:56:49] DEBUG: Game container is visible: True
+[19:56:49] DEBUG: Current stacked widget: QWidget
+[19:56:49] DEBUG: Game board shape: (6, 7)
+[19:56:49] DEBUG: Board has pieces: True
+[19:56:49] DEBUG: State handler exists: True
+[19:56:49] DEBUG: Input handler exists: True
+[19:56:49] DEBUG: Game container HIDE event detected
+[19:56:50] DEBUG: Checking state after returning to title screen
+[19:56:50] DEBUG: UI component check: after_title_return
+[19:56:50] DEBUG: Game container exists: True
+[19:56:50] DEBUG: Game container is visible: False
+[19:56:50] DEBUG: Current stacked widget: IntroController
+[19:56:50] DEBUG: Game board shape: (6, 7)
+[19:56:50] DEBUG: Board has pieces: False
+[19:56:50] DEBUG: State handler exists: True
+[19:56:50] DEBUG: Input handler exists: True
+[19:56:50] TEST: Step 8: Starting new game after title screen
+[19:56:50] DEBUG: UI component check: before_new_game
+[19:56:50] DEBUG: Game container exists: True
+[19:56:50] DEBUG: Game container is visible: False
+[19:56:50] DEBUG: Current stacked widget: IntroController
+[19:56:50] DEBUG: Game board shape: (6, 7)
+[19:56:50] DEBUG: Board has pieces: False
+[19:56:50] DEBUG: State handler exists: True
+[19:56:50] DEBUG: Input handler exists: True
+[19:56:50] DEBUG: Game container SHOW event detected
+[19:56:50] DEBUG: Returned from title flag: False
+[19:56:51] DEBUG: Applying extra updates after starting new game
+[19:56:51] DEBUG: Setting returned_from_title flag manually
+[19:56:51] DEBUG: UI component check: after_new_game
+[19:56:51] DEBUG: Game container exists: True
+[19:56:51] DEBUG: Game container is visible: True
+[19:56:51] DEBUG: Current stacked widget: QWidget
+[19:56:51] DEBUG: Game board shape: (6, 7)
+[19:56:51] DEBUG: Board has pieces: False
+[19:56:51] DEBUG: State handler exists: True
+[19:56:51] DEBUG: Input handler exists: True
+[19:56:52] TEST: Step 9: Making move in new game after returning from title
+[19:56:52] DEBUG: Applying additional rendering fixes
+[19:56:52] DEBUG: Game board check: before_first_move_after_title
+[19:56:52] DEBUG: Board shape: (6, 7)
+[19:56:52] DEBUG: Board contents:
+[[0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]]
+[19:56:52] DEBUG: Found 0 pieces on board: []
+[19:56:52] TEST: Test PAUSED
+[19:56:52] DEBUG: Checking piece visibility: immediately after move in new game
+[19:56:52] DEBUG: Expected board state:
+[19:56:52] DEBUG: Expected 1 pieces: [(5, 3, 1)]
+[19:56:52] DEBUG: Visible pieces: 42 at positions [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 0), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (5, 0), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6)]
+[19:56:53] DEBUG: Capturing cell states: first_move_after_title
+[19:56:53] DEBUG: Captured 42 non-empty cells for first_move_after_title
+[19:56:54] DEBUG: Checking piece visibility after delay
+[19:56:54] DEBUG: Checking piece visibility: after delay in new game
+[19:56:54] DEBUG: Expected board state:
+[19:56:54] DEBUG: Expected 2 pieces: [(4, 3, 2), (5, 3, 1)]
+[19:56:54] DEBUG: Visible pieces: 42 at positions [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 0), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (5, 0), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6)]
+[19:57:11] TEST: Step 10: Making more moves in new game
+[19:57:11] TEST: Test PAUSED
+[19:57:11] DEBUG: Applying additional rendering fixes
+[19:57:20] TEST: Test stopped by user
+[19:57:20] TEST: Generating test report
+
+
+RENDERING TEST SUMMARY
+=====================
+
+Cell State Comparisons:
+  after_first_move: 42 non-empty cells
+  after_second_move: 42 non-empty cells
+  after_third_move: 42 non-empty cells
+  first_move_after_title: 42 non-empty cells
+
+Recommendations:
+1. Ensure force_update_all_cells is called when returning from title screen
+2. Consider using stronger visual refresh techniques in the cell updates
+3. Check that the game board container is properly cleared before rebuilding
+[19:57:20] TEST: Test report written to render_test_log_20250314_195619.txt
+[19:57:24] TEST: Test RESUMED
+[19:57:28] TEST: Test stopped by user
+[19:57:28] TEST: Generating test report
+
+
+RENDERING TEST SUMMARY
+=====================
+
+Cell State Comparisons:
+  after_first_move: 42 non-empty cells
+  after_second_move: 42 non-empty cells
+  after_third_move: 42 non-empty cells
+  first_move_after_title: 42 non-empty cells
+
+Recommendations:
+1. Ensure force_update_all_cells is called when returning from title screen
+2. Consider using stronger visual refresh techniques in the cell updates
+3. Check that the game board container is properly cleared before rebuilding
+[19:57:28] TEST: Test report written to render_test_log_20250314_195619.txt
+[19:57:31] DEBUG: Game container HIDE event detected
