@@ -1,0 +1,36 @@
+[20:04:44] TEST: Starting enhanced rendering test sequence
+[20:04:44] TEST: Logging to: render_test_log_20250314_200429.txt
+[20:04:45] TEST: Step 1: Starting game
+[20:04:45] DEBUG: Game container SHOW event detected
+[20:04:47] TEST: Step 2: Applying special rendering flags
+[20:04:47] DEBUG: Renderer has force_update_all_cells method: True
+[20:04:47] DEBUG: Renderer has returned_from_title flag: True
+[20:04:47] DEBUG: Applying additional rendering fixes
+[20:04:49] TEST: Step 3: Making multiple moves
+[20:04:49] DEBUG: Checking piece visibility: after first move
+[20:04:49] DEBUG: Expected board state:
+[20:04:49] DEBUG: Expected 1 pieces: [(5, 3, 1)]
+[20:04:49] DEBUG: Visible pieces: 42 at positions [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 0), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (5, 0), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6)]
+[20:04:49] DEBUG: Capturing cell states: after_first_move
+[20:04:49] DEBUG: Captured 42 non-empty cells for after_first_move
+[20:04:51] TEST: Made second move in column 4
+[20:04:51] DEBUG: Capturing cell states: after_second_move
+[20:04:51] DEBUG: Captured 42 non-empty cells for after_second_move
+[20:04:53] TEST: Made third move in column 5
+[20:04:53] DEBUG: Capturing cell states: after_third_move
+[20:04:53] DEBUG: Captured 42 non-empty cells for after_third_move
+[20:04:55] TEST: Step 6: Checking board visibility before returning to title
+[20:04:55] DEBUG: Checking piece visibility: before returning to title
+[20:04:55] DEBUG: Expected board state:
+[20:04:55] DEBUG: Expected 6 pieces: [(3, 3, 2), (4, 3, 2), (5, 0, 2), (5, 3, 1), (5, 4, 1), (5, 5, 1)]
+[20:04:55] DEBUG: Visible pieces: 42 at positions [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 0), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (5, 0), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6)]
+[20:04:55] TEST: Test PAUSED
+[20:05:21] TEST: Step 7: Returning to title screen
+[20:05:21] DEBUG: UI component check: before_title_return
+[20:05:21] DEBUG: Game container exists: True
+[20:05:21] DEBUG: Game container is visible: True
+[20:05:21] DEBUG: Current stacked widget: QWidget
+[20:05:21] DEBUG: Game board shape: (6, 7)
+[20:05:21] DEBUG: Board has pieces: True
+[20:05:22] DEBUG: State handler exists: True
+[20:05:22] DEBUG: Input handler exists: True

@@ -9,7 +9,14 @@ lark>=1.1.5  # Parsing
 z3-solver>=4.12.1  # For state validation
 psutil>=5.9.5  # For system monitoring (CPU temperature, etc.)
 
+# LLM & Narrative Generation
+accelerate>=0.20.0  # For optimized transformer inference
+sentencepiece>=0.1.99  # Required for many tokenizers
+bitsandbytes>=0.41.0  # Optional: For 4-bit/8-bit quantization
+huggingface-hub>=0.16.0  # For model downloading (optional)
+
 # Edge Optimization 
+# Include any edge-specific optimizations here
 
 # Development tools
 pyinstaller>=5.11.0  # For creating standalone executables
