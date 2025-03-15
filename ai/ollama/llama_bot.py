@@ -3,9 +3,9 @@ from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
 import os
 
-from ai.ref.personality import personality_dict as p_dict
-from ai.ref.personality import occupation_dict as o_dict
-from ai.ref.personality import setting_dict as s_dict
+from personality import personality_dict as p_dict
+from personality import occupation_dict as o_dict
+from personality import setting_dict as s_dict
 
 
 class LLMBot:
@@ -140,7 +140,7 @@ class LLMBot:
 
 #Testing::
 
-x = LLMBot("gemma3:12b","Gemma","Johnny",personality_key="Love Struck",occupation_key="General",setting_key="Western")
+x = LLMBot("mistral","Gemma","Johnny",personality_key="Aggressive",occupation_key="Pikachu",setting_key="Western")
 x.print_stats()
 print("\n\n")
 print("history",x.get_history())
