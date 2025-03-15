@@ -3,9 +3,9 @@ from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
 import os
 
-from personality import personality_dict as p_dict
-from personality import occupation_dict as o_dict
-from personality import setting_dict as s_dict
+from ai.ollama.personality import personality_dict as p_dict
+from ai.ollama.personality import occupation_dict as o_dict
+from ai.ollama.personality import setting_dict as s_dict
 
 
 class LLMBot:
