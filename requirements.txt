@@ -12,6 +12,12 @@ langchain
 langchain_ollama
 ollama
 
+# Speech To Text
+faster_whisper==1.1.1
+numpy==2.2.3
+pydub==0.25.1
+# remember to install ffmpeg seperatly
+
 # Edge Optimization 
 
 # Development tools
