@@ -1,7 +1,7 @@
 """
 speech_to_text.py
 
-A simple and efficient speech-to-text module using Whisper.
+A simple and efficient speech-to-text module using Whisper library.
 
 This module provides a `SpeechToText` class that leverages `faster-whisper` 
 for transcribing speech from an audio file with optimizations for speed.
