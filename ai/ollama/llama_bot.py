@@ -153,3 +153,4 @@ if __name__ == "__main__":
     print("history",x.get_history())
     print("\n\n\n------------------------------\n")
     print("history",x.get_game_setup())
+    
