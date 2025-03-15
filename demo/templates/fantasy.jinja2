@@ -1,0 +1,12 @@
+{% if move_count < 5 %}
+The battle has just begun on the Crystal Grid. The {{ faction }} consider their next move carefully.
+{% elif move_count < 15 %}
+As the conflict intensifies, the {{ faction }} prepare to {{ action }} in Column {{ next_column }}.
+{% if last_move %}
+Previously: {{ last_move.faction }} placed their crystal in column {{ last_move.column }}, creating a powerful resonance.
+{% endif %}
+{% else %}
+The Crystal Grid pulses with energy as the final confrontation approaches. The {{ faction }} must choose wisely.
+{% endif %}
+
+Suggest a strategic move for the {{ faction }} that balances offense and storytelling impact.
