@@ -47,6 +47,7 @@ class Connect4IntroUI(QMainWindow):
         hangman_action = QAction("Hangman", self)
         game_menu_item.addAction(hangman_action)
         hangman_action.triggered.connect(lambda: self.show_future_games("Hangman"))
+        # lambda delays the function being run when staring the program
 
         battle_ship_action = QAction("Battle Ship", self)
         game_menu_item.addAction(battle_ship_action)
