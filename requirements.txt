@@ -8,6 +8,9 @@ lark>=1.1.5  # Parsing
 # Game Logic & AI
 z3-solver>=4.12.1  # For state validation
 psutil>=5.9.5  # For system monitoring (CPU temperature, etc.)
+langchain
+langchain_ollama
+ollama
 
 # Edge Optimization 
 
