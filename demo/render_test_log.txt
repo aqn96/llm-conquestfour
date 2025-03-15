@@ -1,0 +1,30 @@
+Rendering Test Results
+=====================
+
+[19:50:10] RENDER TEST: Starting rendering test sequence
+[19:50:11] RENDER TEST: Step 1: Starting game
+[19:50:13] RENDER TEST: Step 2: Applying special rendering flags
+[19:50:13] RENDER TEST: Renderer has force_update_all_cells method: True
+[19:50:13] RENDER TEST: Applying additional rendering fixes
+[19:50:14] RENDER TEST: Step 3: Making multiple moves
+[19:50:14] RENDER TEST: Checking piece visibility: after first move
+[19:50:14] RENDER TEST: Expected board state:
+[19:50:14] RENDER TEST: Expected 3 pieces: [(4, 3, 1), (5, 3, 2), (5, 4, 1)]
+[19:50:14] RENDER TEST: Visible pieces: 42 at positions [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 0), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (5, 0), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6)]
+[19:50:19] RENDER TEST: Step 6: Checking board visibility
+[19:50:19] RENDER TEST: Checking piece visibility: before returning to title
+[19:50:19] RENDER TEST: Expected board state:
+[19:50:19] RENDER TEST: Expected 0 pieces: []
+[19:50:19] RENDER TEST: Visible pieces: 42 at positions [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 0), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (5, 0), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6)]
+[19:50:20] RENDER TEST: Step 7: Returning to title screen
+[19:50:22] RENDER TEST: Step 8: Starting new game after title screen
+[19:50:22] RENDER TEST: Returned from title flag: False
+[19:50:23] RENDER TEST: Step 9: Making move in new game after returning from title
+[19:50:23] RENDER TEST: Applying additional rendering fixes
+[19:50:24] RENDER TEST: Checking piece visibility: after move in new game
+[19:50:24] RENDER TEST: Expected board state:
+[19:50:24] RENDER TEST: Expected 5 pieces: [(3, 3, 1), (4, 3, 2), (4, 6, 2), (5, 3, 1), (5, 6, 1)]
+[19:50:24] RENDER TEST: Visible pieces: 42 at positions [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 0), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (5, 0), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6)]
+[19:50:25] RENDER TEST: Step 10: Making more moves in new game
+[19:50:25] RENDER TEST: Applying additional rendering fixes
+[19:50:26] RENDER TEST: Test completed! Writing results to render_test_log.txt
