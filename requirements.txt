@@ -4,19 +4,22 @@ transformers>=4.30.0  # Hugging Face Transformers for Mistral-7B
 PyQt6>=6.4.0  # UI Framework
 jinja2>=3.1.2  # Template system
 lark>=1.1.5  # Parsing
+langchain>=0.0.267  # For LLM chains and agents
+langchain_ollama>=0.0.1  # For Ollama integration
+ollama>=0.1.0  # For local LLM running
 
 # Game Logic & AI
 z3-solver>=4.12.1  # For state validation
 psutil>=5.9.5  # For system monitoring (CPU temperature, etc.)
-langchain
-langchain_ollama
-ollama
+numpy>=1.26.0  # Required for numerical operations in game logic
 
 # Speech To Text
 faster_whisper==1.1.1
 numpy==2.2.3
 pydub==0.25.1
-# remember to install ffmpeg seperatly
+sounddevice==0.5.1
+scipy==1.15.2
+# remember to install ffmpeg separately
 
 # Edge Optimization 
 

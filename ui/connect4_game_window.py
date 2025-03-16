@@ -1,6 +1,6 @@
 import sys
 import os
-from connect4board import Connect4Board
+from ui.connect4board import Connect4Board
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QLabel, QVBoxLayout, QHBoxLayout, QWidget,
     QTextEdit, QLineEdit, QPushButton, QMessageBox, QGridLayout, QDialog
@@ -9,6 +9,8 @@ from PyQt6.QtGui import QPixmap, QFont, QAction
 from PyQt6.QtCore import Qt, QTimer
 from ai.ollama.llama_bot import LLMBot
 from game.thermal_aware_ai import ThermalAwareAI
+# from speech_to_text.audio_recorder import AudioRecorder
+# from speech_to_text.speech_to_text import SpeechToText
 
 
 class Connect4GameWindow(QMainWindow):
@@ -32,7 +34,7 @@ class Connect4GameWindow(QMainWindow):
 
         # Add Background Image
         self.background_label = QLabel(central_widget)
-        image_path = os.path.abspath("connect4_game_bg.png")
+        image_path = os.path.abspath("ui/connect4_game_bg.png")
         pixmap = QPixmap(image_path)
         self.background_label.setPixmap(pixmap)
         self.background_label.setScaledContents(True)
@@ -185,6 +187,33 @@ class Connect4GameWindow(QMainWindow):
         """ Quit the Game """
         dialog = QuitDialog()
         dialog.exec()
+    
+    # def record_and_transcribe(self, duration: int = 5, model_size: str = "base"):
+    #     """
+    #     Records audio from the microphone and transcribes it to text.
+
+    #     Args:
+    #         duration (int): The length of the recording in seconds.
+    #         model_size (str): The Whisper model size to use for transcription.
+
+    #     Returns:
+    #         str: The transcribed text.
+    #     """
+    #     # Initialize modules
+    #     recorder = AudioRecorder()
+    #     stt = SpeechToText(model_size=model_size)
+
+    #     # Record audio
+    #     audio_file = recorder.record(duration=duration)
+
+    #     # Transcribe audio
+    #     transcription = stt.transcribe(audio_file)
+    #     print("Transcription:", transcription)
+
+    #     # Clean up by deleting the recorded file
+    #     recorder.delete_audio(audio_file)
+
+    #     return transcription
 
 
 class AboutDialog(QMessageBox):
