@@ -13,10 +13,13 @@ langchain_ollama
 ollama
 
 # Speech To Text
+# remember to install ffmpeg on machine
 faster_whisper==1.1.1
 numpy==2.2.3
 pydub==0.25.1
-# remember to install ffmpeg seperatly
+
+# Speech Stream To Text
+sounddevice==0.5.1
 
 # Edge Optimization 
 
