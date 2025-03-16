@@ -10,8 +10,8 @@ Dependencies:
 - speech_to_text.py
 """
 
-from .audio_recorder import AudioRecorder
-from .speech_to_text import SpeechToText
+from audio_recorder import AudioRecorder
+from speech_to_text import SpeechToText
 
 def record_and_transcribe(duration: int = 5, model_size: str = "base"):
     """
