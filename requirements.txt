@@ -16,10 +16,13 @@ numpy>=1.26.0  # Required for numerical operations in game logic
 # Speech To Text
 faster_whisper==1.1.1
 numpy==2.2.3
+# numpy==1.26.4
 pydub==0.25.1
 sounddevice==0.5.1
 scipy==1.15.2
+
 # remember to install ffmpeg separately
+
 
 # Edge Optimization 
 

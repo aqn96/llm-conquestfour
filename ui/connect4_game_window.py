@@ -9,9 +9,6 @@ from PyQt6.QtGui import QPixmap, QFont, QAction
 from PyQt6.QtCore import Qt, QTimer
 from ai.ollama.llama_bot import LLMBot
 from game.thermal_aware_ai import ThermalAwareAI
-# from speech_to_text.audio_recorder import AudioRecorder
-# from speech_to_text.speech_to_text import SpeechToText
-
 
 class Connect4GameWindow(QMainWindow):
     def __init__(self, bot, difficulty, start_window):
