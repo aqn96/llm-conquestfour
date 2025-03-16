@@ -85,7 +85,7 @@ See [Windows Setup Guide](demo/WINDOWS_SETUP.md) for detailed instructions.
 ### Starting the Game
 
 ```bash
-python ui/game_setup.py
+python main.py
 ```
 
 ### Game Controls
