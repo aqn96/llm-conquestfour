@@ -1,6 +1,5 @@
 import sys
 import os
-import subprocess
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
@@ -11,7 +10,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QFont, QPixmap, QAction
 from PyQt6.QtCore import Qt
 from ai.ollama.llama_bot import LLMBot
-from game import Connect4GameWindow
+from connect4_game_window import Connect4GameWindow
 
 
 class Connect4IntroUI(QMainWindow):
@@ -78,7 +77,7 @@ class Connect4IntroUI(QMainWindow):
 
         self.name_input = QLineEdit(self)
         self.name_input.setPlaceholderText("Enter your name")
-        self.name_input.setStyleSheet("color: black; background-color: white; font-size: 16px; height: 40px; width: 300px; padding: 5px;")  
+        self.name_input.setStyleSheet("color: black; background-color: white; font-size: 16px; height: 40px; width: 300px; padding: 5px;")
 
         self.difficulty_label = QLabel("Difficulty Level:", self)
         self.difficulty_label.setFont(QFont("Arial", 20))
@@ -86,14 +85,14 @@ class Connect4IntroUI(QMainWindow):
 
         self.difficulty_dropdown = QComboBox(self)
         self.difficulty_dropdown.addItems(["Easy", "Normal", "Hard"])
-        self.difficulty_dropdown.setStyleSheet("color: black; background-color: white; font-size: 16px; height: 40px; width: 300px; padding: 5px;")  
+        self.difficulty_dropdown.setStyleSheet("color: black; background-color: white; font-size: 16px; height: 40px; width: 300px; padding: 5px;") 
 
         self.theme_label = QLabel("Game Narrative Theme:", self)
         self.theme_label.setFont(QFont("Arial", 20))
         self.theme_label.setStyleSheet("color: black; background-color: lightgray; padding: 5px; border-radius: 5px;")
 
         self.theme_dropdown = QComboBox(self)
-        self.theme_dropdown.addItems(["Western", "Civil War", "Fantasy", "Harry Potter"])
+        self.theme_dropdown.addItems(["Western", "Civil War", "Fantasy", "Harry Potter", "Northeastern University"])
         self.theme_dropdown.setStyleSheet("color: black; background-color: white; font-size: 16px; height: 40px; width: 300px; padding: 5px;")
 
         self.ai_label = QLabel("Narrator Personality:", self)
@@ -101,8 +100,8 @@ class Connect4IntroUI(QMainWindow):
         self.ai_label.setStyleSheet("color: black; background-color: lightgray; padding: 5px; border-radius: 5px;")
 
         self.ai_dropdown = QComboBox(self)
-        self.ai_dropdown.addItems(["Snarky", "Aggressive", "Encouraging"])
-        self.ai_dropdown.setStyleSheet("color: black; background-color: white; font-size: 16px; height: 40px; width: 300px; padding: 5px;") 
+        self.ai_dropdown.addItems(["Encouraging", "Snarky", "Aggressive", "Shy", "Love Struck"])
+        self.ai_dropdown.setStyleSheet("color: black; background-color: white; font-size: 16px; height: 40px; width: 300px; padding: 5px;")
 
         self.start_button = QPushButton("Start Game", self)
         self.start_button.setStyleSheet("""
@@ -132,8 +131,7 @@ class Connect4IntroUI(QMainWindow):
 
         # Apply Layout to Central Widget
         central_widget.setLayout(layout)
-        
-    
+
     def init_bot(self, name, ai_personality, theme):
         """Initialize the Bot with different settings"""
         self.bot = LLMBot("mistral", "Gemma", name, personality_key=ai_personality, occupation_key="Pikachu", setting_key=theme)
@@ -151,7 +149,6 @@ class Connect4IntroUI(QMainWindow):
         self.window2 = Connect4GameWindow(bot, difficulty, self)
         self.window2.show()
         self.close()
-        
 
     def show_about(self):
         """ Displays an About message in a dialog"""
