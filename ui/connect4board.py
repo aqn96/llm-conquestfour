@@ -32,7 +32,6 @@ class Connect4Board(QWidget):
                     self.board_buttons[row][col].setStyleSheet(
                         "background-color: white; border: 2px solid grey; border-radius: 30px"
                     )
-                    # self.board_buttons[row][col].clicked.connect(lambda _, c=col: self.handle_move(c))
 
                 self.board_layout.addWidget(self.board_buttons[row][col], row, col)
 
@@ -47,10 +46,6 @@ class Connect4Board(QWidget):
         # Enable mouse tracking
         self.board_buttons[0][col].installEventFilter(self)
 
-    def handle_move(self, column):
-        """ Handle when a user clicks on a column to drop a piece. """
-        print(f"Player clicked column {column}")
-    
     def eventFilter(self, obj, event):
         """ Handle mouse press and release for dropping disks. """
         if isinstance(event, QMouseEvent):

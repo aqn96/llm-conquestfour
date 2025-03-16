@@ -240,19 +240,6 @@ class RestartDialog(QDialog):
     
     def restart_application(self):
         """ Close current game window and load start_game"""
-        # app = QApplication(sys.argv)
         self.close()
         self.curr_window.close()
-        #subprocess.Popen([sys.executable, "game_setup.py"])
-        #QApplication.quit()
-        #sys.exit(0)
         self.start_window.show()
-        # sys.exit(app.exec())
-
-
-# if __name__ == "__main__":
-#     app = QApplication(sys.argv[0])
-
-#     window = Connect4GameWindow()
-#     window.show()
-#     sys.exit(app.exec())
