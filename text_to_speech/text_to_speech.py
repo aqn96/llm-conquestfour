@@ -30,7 +30,7 @@ class TextToSpeech:
         """
         self.tts = TTS(model)
 
-    def play_audio(self, file_path: str):
+    def _play_audio(self, file_path: str):
         """
         Plays an audio file based on the operating system and deletes it after playback.
 
