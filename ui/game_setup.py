@@ -79,7 +79,6 @@ class Connect4IntroUI(QMainWindow):
         self.name_input = QLineEdit(self)
         self.name_input.setPlaceholderText("Enter your name")
         self.name_input.setStyleSheet("color: black; background-color: white; font-size: 16px; height: 40px; width: 300px; padding: 5px;")  
-        print(self.name_input.text())
 
         self.difficulty_label = QLabel("Difficulty Level:", self)
         self.difficulty_label.setFont(QFont("Arial", 20))
@@ -138,7 +137,6 @@ class Connect4IntroUI(QMainWindow):
     def init_bot(self, name, ai_personality, theme):
         """Initialize the Bot with different settings"""
         self.bot = LLMBot("mistral", "Gemma", name, personality_key=ai_personality, occupation_key="Pikachu", setting_key=theme)
-        self.bot.print_stats()
 
     def start_game(self):
         """ Collects user input and starts the game """
@@ -157,7 +155,7 @@ class Connect4IntroUI(QMainWindow):
         #     "--ai-personality", ai_personality
         # ])
         bot = LLMBot("mistral","Gemma",name,personality_key=ai_personality,occupation_key="Pikachu",setting_key=theme)
-        self.window2 = Connect4GameWindow(bot, difficulty)
+        self.window2 = Connect4GameWindow(bot, difficulty, self)
         self.window2.show()
         self.close()
         

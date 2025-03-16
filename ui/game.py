@@ -12,11 +12,12 @@ from ai.ollama.llama_bot import LLMBot
 
 
 class Connect4GameWindow(QMainWindow):
-    def __init__(self, bot, difficulty):
+    def __init__(self, bot, difficulty, start_window):
         super().__init__()
         self.initUI()
         self.bot = bot
         self.difficulty = difficulty
+        self.start_window = start_window
 
     def initUI(self):
         self.setWindowTitle("Connect 4 - Game Window")
@@ -130,7 +131,7 @@ class Connect4GameWindow(QMainWindow):
 
     def restart(self):
         """ Restart the Game """
-        dialog = RestartDialog()
+        dialog = RestartDialog(self.start_window, self)
         dialog.exec()
 
     def quit(self):
@@ -218,10 +219,12 @@ class QuitDialog(QDialog):
 
 class RestartDialog(QDialog):
     """ Restart Dialog (Back to Log in) """
-    def __init__(self):
+    def __init__(self, start_window, curr_window):
         super().__init__()
         self.setWindowTitle("Restart The Game")
         layout = QGridLayout()
+        self.start_window = start_window
+        self.curr_window = curr_window
 
         confirmation = QLabel("Are you sure you want to restart?")
         yes = QPushButton("Yes")
@@ -237,10 +240,14 @@ class RestartDialog(QDialog):
     
     def restart_application(self):
         """ Close current game window and load start_game"""
+        # app = QApplication(sys.argv)
         self.close()
-        subprocess.Popen([sys.executable, "game_setup.py"])
-        QApplication.quit()
-        sys.exit(0)
+        self.curr_window.close()
+        #subprocess.Popen([sys.executable, "game_setup.py"])
+        #QApplication.quit()
+        #sys.exit(0)
+        self.start_window.show()
+        # sys.exit(app.exec())
 
 
 # if __name__ == "__main__":
