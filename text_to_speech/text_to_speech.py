@@ -1,13 +1,13 @@
 """
 text_to_speech.py
 
-A simple and efficient text-to-speech module using Coqui TTS library.
+A simple and efficient text-to-speech module using the Coqui TTS library.
 
-This module provides `TextToSpeech` class that leverages Coqui `TTS.api`
-for converting text to audio with optimizations for speed.
+This module provides a `TextToSpeech` class that leverages Coqui's `TTS.api`
+for converting text into speech with optimizations for speed and resource efficiency.
 
 Dependencies:
-- 
+- Coqui TTS (`TTS`)
 """
 import os
 import platform
@@ -15,23 +15,24 @@ import subprocess
 import tempfile
 from TTS.api import TTS
 
-MODEL = "tts_models/en/ljspeech/tacotron2-DDC"
+DEFAULT_MODEL = "tts_models/en/ljspeech/tacotron2-DDC"
+
 class TextToSpeech:
     """
      A simple text-to-speech wrapper using the Coqui TTS model.
     """
-    def __init__(self, model: str = MODEL):
+    def __init__(self, model: str = DEFAULT_MODEL):
         """
-        Initializes the TTS model.
+        Initializes the TTS model for speech synthesis.
 
         Args:
-            model (str): The model to use for synthesis.
+            model (str): The model to use for text-to-speech conversion.
         """
         self.tts = TTS(model)
 
     def play_audio(self, file_path: str):
         """
-        Plays an audio file based on the operating system.
+        Plays an audio file based on the operating system and deletes it after playback.
 
         Args:
             file_path (str): Path to the audio file.
@@ -71,13 +72,14 @@ class TextToSpeech:
         Args:
             text (str): The text to synthesize.
         """
-        temp_audio_path = os.path.join(tempfile.gettempdir(), "temp_speech.wav")
+        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_audio:
+            temp_audio_path = temp_audio.name
 
-        # Generate speech and save to temp file (on disk)
+        # Generate speech and save it to the temporary file
         self.tts.tts_to_file(text=text, file_path=temp_audio_path)
 
-        # Play the speech and delete the file
-        self.play_audio(temp_audio_path)
+        # Play the generated speech and delete the file
+        self._play_audio(temp_audio_path)
 
 if __name__ == "__main__":
     tts = TextToSpeech()
