@@ -145,7 +145,7 @@ class Connect4IntroUI(QMainWindow):
 
         print(f"Starting game with:\nName: {name}\nDifficulty: {difficulty}\nTheme: {theme}\nAI Personality: {ai_personality}")
 
-        bot = LLMBot("mistral","Gemma",name,personality_key=ai_personality,occupation_key="Pikachu",setting_key=theme)
+        bot = LLMBot("mistral","Gemma",name,personality_key=ai_personality,occupation_key="Teacher",setting_key=theme)
         self.window2 = Connect4GameWindow(bot, difficulty, self)
         self.window2.show()
         self.close()

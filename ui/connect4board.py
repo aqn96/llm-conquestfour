@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QMessageBox
-from PyQt6.QtCore import Qt, QEvent
+from PyQt6.QtCore import Qt, QEvent, pyqtSignal
 from PyQt6.QtGui import QMouseEvent
 import os
 import sys
@@ -7,10 +7,12 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 from game.connect_four import ConnectFourGame, Player
-from game.difficulty_levels import EasyAI, MediumAI,HardAI
+from game.narrative_engine import MoveEvaluator
+from game.difficulty_levels import EasyAI, MediumAI, HardAI
 
 
 class Connect4Board(QWidget):
+    moveMade = pyqtSignal(str) # Signal to pass move score to the main window
     def __init__(self, difficulty, parent=None):
         super().__init__(parent)
         self.difficulty = difficulty
@@ -25,6 +27,7 @@ class Connect4Board(QWidget):
             self.computer_player = MediumAI()
         else:
             self.computer_player = HardAI()
+        self.move_evaluator = MoveEvaluator()
         self.init_board()
 
     def init_board(self):
@@ -107,6 +110,10 @@ class Connect4Board(QWidget):
         
         color = "red" if self.current_player == "red" else "yellow"
         self.game_logic.make_move(column)
+        if self.current_player == "red":
+            # Get move score and emit signal to main window
+            score_str = self.getMoveScore(column)
+            self.moveMade.emit(score_str)  # Emit move score
         self.board_buttons[row][column].setStyleSheet(f"background-color: {color}; border-radius: 30px; border: 2px solid grey")
         self.reset_top_button(column)
         self.board_state[column] -= 1
@@ -114,6 +121,10 @@ class Connect4Board(QWidget):
         end_state = self.check_board_state()
         if not end_state and self.current_player == "yellow":
             self.computer_move()
+    
+    def getMoveScore(self, col):
+        """ Evaluate move score using MoveEvaluator """
+        return self.move_evaluator.evaluate_move(self.game_logic, col)
     
     def computer_move(self):
         """ Computer moving piece into column"""

@@ -6,8 +6,9 @@ from PyQt6.QtWidgets import (
     QTextEdit, QLineEdit, QPushButton, QMessageBox, QGridLayout, QDialog
 )
 from PyQt6.QtGui import QPixmap, QFont, QAction
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QTimer
 from ai.ollama.llama_bot import LLMBot
+from game.thermal_aware_ai import ThermalAwareAI
 
 
 class Connect4GameWindow(QMainWindow):
@@ -16,7 +17,10 @@ class Connect4GameWindow(QMainWindow):
         self.bot = bot
         self.difficulty = difficulty
         self.start_window = start_window
+        self.temperatureAI = ThermalAwareAI()
+        self.event = ""
         self.initUI()
+        
 
     def initUI(self):
         self.setWindowTitle("Connect 4 - Game Window")
@@ -66,6 +70,7 @@ class Connect4GameWindow(QMainWindow):
 
         # Board Container (500 x 500)
         self.game_board = Connect4Board(self.difficulty, self)
+        self.game_board.moveMade.connect(self.update_event)
         bottom_layout.addWidget(self.game_board)
 
         # Chatbox Section
@@ -105,6 +110,49 @@ class Connect4GameWindow(QMainWindow):
         # Apply layout to central widget
         central_widget.setLayout(main_layout)
 
+        # CPU temperature widget#
+        temp = self.temperatureAI.get_current_temperature()
+        self.temp_label = QLabel(f"{temp:.1f}°C", central_widget)
+        self.temp_label.setStyleSheet("""
+            background-color: white;
+            border-radius: 8px;
+            padding: 5px;
+            font-size: 30px;
+            color: black;
+        """)
+        self.temp_label.adjustSize()
+        label_width = self.temp_label.width()
+        self.temp_label.move(self.width() - label_width - 50, 40)
+        self.temp_label.raise_()
+        # Clearly add timer explicitly for continuous updates
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_temperature)
+        self.timer.start(1000)  # Update every second
+
+    def update_temperature(self):
+        """ Update the temperature label regularly. """
+        temp = self.temperatureAI.get_current_temperature()
+
+        self.temp_label.setText(f"{temp:.1f}°C")
+        self.temp_label.adjustSize()
+        
+        # Keep aligned top-right clearly after resizing
+        label_width = self.temp_label.width()
+        self.temp_label.move(self.width() - label_width - 50, 40)
+    
+    def update_event(self, move_score):
+        """ ✅ Update event when a move is made """
+        self.event = move_score
+        print(f"Updated Event: {self.event}")  # debugging
+        self.chat_display.append(self.bot.get_response_to_speech(f"Player makes a {self.event} move!"))
+        self.chat_display.append(f"\n")
+        self.chat_display.toPlainText()
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        label_width = self.temp_label.width()
+        self.temp_label.move(self.width() - label_width - 50, 40)
+    
     def send_message(self):
         """ Capture user input and display it in the chat display """
         user_input = self.chat_input.text()

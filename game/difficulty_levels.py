@@ -5,8 +5,8 @@ This module provides different difficulty levels for the Connect Four AI,
 ranging from easy (beginner-friendly) to hard (challenging).
 """
 
-from .connect_four import Player
-from .minimax import MinimaxEngine
+from game.connect_four import Player
+from game.minimax import MinimaxEngine
 
 
 class EasyAI(MinimaxEngine):
@@ -412,4 +412,4 @@ def computer_move(game, difficulty="medium"):
     ai = get_ai_by_difficulty(difficulty)
     
     # Use the AI to determine the best move
-    return ai.find_best_move(game)
+    return ai.find_best_move(game) 
