@@ -13,10 +13,10 @@ from ai.ollama.llama_bot import LLMBot
 class Connect4GameWindow(QMainWindow):
     def __init__(self, bot, difficulty, start_window):
         super().__init__()
-        self.initUI()
         self.bot = bot
         self.difficulty = difficulty
         self.start_window = start_window
+        self.initUI()
 
     def initUI(self):
         self.setWindowTitle("Connect 4 - Game Window")
@@ -65,7 +65,7 @@ class Connect4GameWindow(QMainWindow):
         bottom_layout = QHBoxLayout()  # Game board on left, chatbox on right
 
         # Board Container (500 x 500)
-        self.game_board = Connect4Board(self)
+        self.game_board = Connect4Board(self.difficulty, self)
         bottom_layout.addWidget(self.game_board)
 
         # Chatbox Section
@@ -116,9 +116,7 @@ class Connect4GameWindow(QMainWindow):
             self.chat_display.append(self.bot.get_response_to_speech(user_input))
             self.chat_display.append(f"\n")
 
-        self.last_user_message = user_input
-        print(self.chat_display.toPlainText())
-        print("User said:", self.last_user_message)
+        self.chat_display.toPlainText()
 
     def show_about(self):
         """ Opens the About dialog """

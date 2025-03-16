@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton
+from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QMessageBox
 from PyQt6.QtCore import Qt, QEvent
 from PyQt6.QtGui import QMouseEvent
 import os
@@ -6,16 +6,26 @@ import sys
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
-from game.connect_four import ConnectFourGame
+from game.connect_four import ConnectFourGame, Player
+from game.difficulty_levels import EasyAI, MediumAI,HardAI
+
 
 class Connect4Board(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, difficulty, parent=None):
         super().__init__(parent)
-        self.init_board()
+        self.difficulty = difficulty
         self.current_column = None  # Track where the player is clicking
         self.current_player = "red"  # Start with player Red
-        self.board_state = [6] * 7 # This needs to be connected with the game
+        self.board_state = [6] * 7
         self.game_logic = ConnectFourGame()
+        self.game_over = False
+        if difficulty == "Easy":
+            self.computer_player = EasyAI()
+        elif difficulty == "Normal":
+            self.computer_player = MediumAI()
+        else:
+            self.computer_player = HardAI()
+        self.init_board()
 
     def init_board(self):
         """ Initialize the Connect 4 Board UI. """
@@ -54,6 +64,8 @@ class Connect4Board(QWidget):
 
     def eventFilter(self, obj, event):
         """ Handle mouse press and release for dropping disks when it is player's turn"""
+        if self.game_over:
+            return super().eventFilter(obj, event)
         if isinstance(event, QMouseEvent) and self.current_player == "red":
             for col in range(7):
                 if obj == self.board_buttons[0][col]:  # Only allow clicking top row
@@ -105,8 +117,8 @@ class Connect4Board(QWidget):
     
     def computer_move(self):
         """ Computer moving piece into column"""
-        # col = self.game_logic.get_computer_move()
-        # self.drop_piece(col)
+        col = self.computer_player.find_best_move(self.game_logic)
+        self.drop_piece(col)
         
     def check_board_state(self):
         """ Check current board state if there is a winner"""
@@ -115,9 +127,11 @@ class Connect4Board(QWidget):
             msg_box = QMessageBox(self)
             msg_box.setIcon(QMessageBox.Icon.Information)
             msg_box.setWindowTitle("Game Over")
-            msg_box.setText(f"The winner is: {winner}!\n")
+            winner_player = "Computer" if winner == Player.TWO else "YOU"
+            msg_box.setText(f"The winner is: {winner_player}!\n")
             msg_box.exec()
             self.setEnabled(False)
+            self.game_over = True
             return winner
         return None
 
