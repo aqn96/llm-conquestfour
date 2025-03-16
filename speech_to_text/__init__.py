@@ -1,3 +1,3 @@
 """
-Source package initialization
+Speech To Text package initialization
 """
