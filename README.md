@@ -32,7 +32,7 @@ The game features an intelligent AI opponent that not only challenges your strat
 
 - Python 3.9-3.12 (Do not go pass 3.12 or compatibility issues)
 - [Ollama](https://ollama.com/) - for running local LLMs
-- FFmpeg (optional - for speech features)
+- FFmpeg (for speech features)
 
 ### Setup
 
