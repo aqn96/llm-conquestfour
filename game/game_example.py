@@ -6,9 +6,10 @@ components. It runs a game where a human player plays against the AI.
 """
 
 # Import from the local package
-from connect_four import Player, ConnectFourGame
+from connect_four import Player
+from connect_four import ConnectFourGame
 from state_validator import StateValidator
-from thermal_aware_ai import ThermalAwareAI
+from difficulty_levels import get_ai_by_difficulty
 
 
 def print_board(game):
@@ -62,12 +63,43 @@ def get_player_move(game):
             print("Please enter a valid number.")
 
 
+def get_difficulty_choice():
+    """
+    Ask the player to choose a difficulty level.
+    
+    Returns:
+        str: The chosen difficulty ('easy', 'medium', or 'hard')
+    """
+    print("Choose a difficulty level:")
+    print("1. Easy - Good for beginners")
+    print("2. Medium - Balanced challenge")
+    print("3. Hard - Significant challenge")
+    
+    while True:
+        try:
+            choice = int(input("Enter your choice (1-3): "))
+            if choice == 1:
+                return "easy"
+            elif choice == 2:
+                return "medium"
+            elif choice == 3:
+                return "hard"
+            else:
+                print("Please enter a number between 1 and 3.")
+        except ValueError:
+            print("Please enter a valid number.")
+
+
 def main():
     """
     Run a simple Connect Four game between a human player and an AI.
     """
     print("=== Connect Four Game ===")
     print("You are X, the AI is O.")
+    
+    # Let the player choose a difficulty level
+    difficulty = get_difficulty_choice()
+    print(f"You selected {difficulty.capitalize()} difficulty.")
     print("Enter a column number (0-6) to place your piece.")
     
     # Initialize game components
@@ -77,8 +109,24 @@ def main():
     # used in a full implementation to verify game states)
     _ = StateValidator()
     
-    # Use the thermal-aware AI that adjusts based on system temperature
-    ai = ThermalAwareAI()
+    # Choose the AI based on selected difficulty
+    ai = get_ai_by_difficulty(difficulty)
+    
+    # If the system supports thermal monitoring, wrap the AI with thermal awareness
+    try:
+        # Import here to avoid the unused import warning
+        from thermal_aware_ai import ThermalAwareAI
+        thermal_ai = ThermalAwareAI()
+        # Check if thermal monitoring is available
+        temp = thermal_ai.get_current_temperature()
+        if temp > 0:
+            print("Thermal monitoring is available.")
+            print("The AI will adapt to system temperature.")
+            ai = thermal_ai
+    except (ImportError, AttributeError):
+        # Either thermal_aware_ai module is not available or
+        # there was an error accessing the thermal information
+        pass
     
     # Main game loop
     while not game.is_game_over():
@@ -93,13 +141,14 @@ def main():
             # AI's turn
             print("AI is thinking...")
             
-            # Get the AI's move using the thermal-aware strategy
+            # Get the AI's move
             col = ai.find_best_move(game)
             
             # Display the current temperature if available
-            temp = ai.get_current_temperature()
-            if temp > 0:
-                print(f"System temperature: {temp:.1f}°C")
+            if hasattr(ai, 'get_current_temperature'):
+                temp = ai.get_current_temperature()
+                if temp > 0:
+                    print(f"System temperature: {temp:.1f}°C")
             
             print(f"AI places piece in column {col}")
             game.make_move(col)

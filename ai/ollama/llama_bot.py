@@ -140,7 +140,7 @@ class LLMBot:
 
 #Testing::
 if __name__ == "__main__":
-    x = LLMBot("mistral","Gemma","Johnny",personality_key="Aggressive",occupation_key="Pikachu",setting_key="Western")
+    x = LLMBot("mistral","Gemma","Johnny",personality_key="Aggressive",occupation_key="Teacher",setting_key="Western")
     x.print_stats()
     print("\n\n")
     print("history",x.get_history())
