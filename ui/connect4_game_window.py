@@ -1,6 +1,5 @@
 import sys
 import os
-import subprocess
 from connect4board import Connect4Board
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QLabel, QVBoxLayout, QHBoxLayout, QWidget,
@@ -74,7 +73,7 @@ class Connect4GameWindow(QMainWindow):
 
         # Chat Display
         self.chat_display = QTextEdit(self)
-        # self.chat_display.setReadOnly(True)
+        self.chat_display.setReadOnly(True)
         self.chat_display.setStyleSheet("background-color: white; border: 1px solid gray; color: black")
         self.chat_display.setFixedSize(300, 400)  # Set chat display size
         chat_layout.addWidget(self.chat_display)
@@ -113,7 +112,9 @@ class Connect4GameWindow(QMainWindow):
         if user_input.strip():
             self.chat_display.append(f"You: {user_input}")
             self.chat_input.clear()
+            self.chat_display.append(f"\n")
             self.chat_display.append(self.bot.get_response_to_speech(user_input))
+            self.chat_display.append(f"\n")
 
         self.last_user_message = user_input
         print(self.chat_display.toPlainText())
@@ -240,6 +241,7 @@ class RestartDialog(QDialog):
     
     def restart_application(self):
         """ Close current game window and load start_game"""
+
         self.close()
         self.curr_window.close()
         self.start_window.show()

@@ -1,7 +1,12 @@
 from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton
 from PyQt6.QtCore import Qt, QEvent
 from PyQt6.QtGui import QMouseEvent
-
+import os
+import sys
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
+from game.connect_four import ConnectFourGame
 
 class Connect4Board(QWidget):
     def __init__(self, parent=None):
@@ -10,6 +15,7 @@ class Connect4Board(QWidget):
         self.current_column = None  # Track where the player is clicking
         self.current_player = "red"  # Start with player Red
         self.board_state = [6] * 7 # This needs to be connected with the game
+        self.game_logic = ConnectFourGame()
 
     def init_board(self):
         """ Initialize the Connect 4 Board UI. """
@@ -47,8 +53,8 @@ class Connect4Board(QWidget):
         self.board_buttons[0][col].installEventFilter(self)
 
     def eventFilter(self, obj, event):
-        """ Handle mouse press and release for dropping disks. """
-        if isinstance(event, QMouseEvent):
+        """ Handle mouse press and release for dropping disks when it is player's turn"""
+        if isinstance(event, QMouseEvent) and self.current_player == "red":
             for col in range(7):
                 if obj == self.board_buttons[0][col]:  # Only allow clicking top row
                     if event.type() == QEvent.Type.MouseButtonPress:
@@ -60,8 +66,8 @@ class Connect4Board(QWidget):
     def on_mouse_press(self, col):
         """ Show the disk when the player clicks a top button. """
         self.current_column = col
-        color = "red" if self.current_player == "red" else "yellow"
-        self.board_buttons[0][col].setStyleSheet(f"background-color: {color}; border-radius: 30px; border: 2px solid grey;")
+        # color = "red" if self.current_player == "red" else "yellow"
+        self.board_buttons[0][col].setStyleSheet(f"background-color: 'red'; border-radius: 30px; border: 2px solid grey;")
         return True
 
     def on_mouse_release(self, event, col):
@@ -69,11 +75,11 @@ class Connect4Board(QWidget):
         release_pos = event.globalPosition()  # Get global coordinates
 
         board_pos = self.mapFromGlobal(release_pos)  # Convert to board-local position
-        release_col = board_pos.x() // (60 + 10)  # Convert X position to column index
-        release_row = board_pos.y() // (60 + 10)  # Convert Y position to row index
+        release_col = int(board_pos.x() // (60 + 10))  # Convert X position to column index
+        release_row = int(board_pos.y() // (60 + 10))  # Convert Y position to row index
 
-        if release_row == 0 and release_col == self.current_column:
-            self.drop_piece(col)
+        if release_row == 0 and release_col == self.current_column and self.game_logic.is_valid_move(release_col):
+            self.drop_piece(release_col)
         else:
             self.reset_top_button(self.current_column)
         
@@ -88,11 +94,33 @@ class Connect4Board(QWidget):
             return
         
         color = "red" if self.current_player == "red" else "yellow"
+        self.game_logic.make_move(column)
         self.board_buttons[row][column].setStyleSheet(f"background-color: {color}; border-radius: 30px; border: 2px solid grey")
         self.reset_top_button(column)
         self.board_state[column] -= 1
         self.current_player = "yellow" if self.current_player == "red" else "red"  # Switch player
+        end_state = self.check_board_state()
+        if not end_state and self.current_player == "yellow":
+            self.computer_move()
     
+    def computer_move(self):
+        """ Computer moving piece into column"""
+        # col = self.game_logic.get_computer_move()
+        # self.drop_piece(col)
+        
+    def check_board_state(self):
+        """ Check current board state if there is a winner"""
+        winner = self.game_logic.get_winner()
+        if winner:
+            msg_box = QMessageBox(self)
+            msg_box.setIcon(QMessageBox.Icon.Information)
+            msg_box.setWindowTitle("Game Over")
+            msg_box.setText(f"The winner is: {winner}!\n")
+            msg_box.exec()
+            self.setEnabled(False)
+            return winner
+        return None
+
     def reset_top_button(self, col):
         """ Reset the top row button color if not dropped. """
         self.board_buttons[0][col].setStyleSheet("background-color: lightgrey; border: 2px solid grey; font-size: 20px")
