@@ -1,9 +1,8 @@
 # ConquestFour: AI-Powered Narrative Connect Four
-On-Device AI Hackathon co-hosted by Qualcomm Technologies, Microsoft, and Northeastern University
 
-![ConquestFour Logo](assets/images/logo.png)
+*On-Device AI Hackathon co-hosted by Qualcomm Technologies, Microsoft, and Northeastern University*
 
-> A narrative-driven Connect Four game powered by local LLMs that react to your moves with dynamic storytelling.
+A narrative-driven Connect Four game powered by local LLMs that react to your moves with dynamic storytelling.
 
 ## Overview
 
@@ -22,15 +21,14 @@ The game features an intelligent AI opponent that not only challenges your strat
 
 ## Screenshots
 
-![Gameplay Screenshot](assets/images/gameplay.png)
-![Narrative Example](assets/images/narrative.png)
+*[Gameplay Screenshot]* *[Narrative Example]*
 
 ## Installation
 
 ### Prerequisites
 
-- Python 3.9-3.12 (Do not go pass 3.12 or compatibility issues)
-- [Ollama](https://ollama.com/) - for running local LLMs
+- Python 3.9-3.12 (Do not go past 3.12 or compatibility issues)
+- Ollama - for running local LLMs
 - FFmpeg (for speech features)
 
 ### Setup
@@ -77,52 +75,17 @@ For Windows users, we provide automated setup scripts:
 demo\run_game_windows.bat
 ```
 
-See [Windows Setup Guide](demo/WINDOWS_SETUP.md) for detailed instructions.
+See Windows Setup Guide for detailed instructions.
 
 ## Usage
 
 ### Starting the Game
 
-# Game Title (Replace with your actual game title)
-
-## Getting Started
-
-This section outlines how to set up and run the game.
-
-### Prerequisites
-
-* Python (Specify version if necessary, e.g., Python 3.8+)
-* pip (Python package installer)
-
-### Installation
-
-1.  **Clone the repository:**
-
-    ```bash
-    git clone [repository URL]
-    cd [repository directory]
-    ```
-
-2.  **Create and activate a virtual environment (recommended):**
-
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # On macOS/Linux
-    venv\Scripts\activate  # On Windows
-    ```
-
-3.  **Install dependencies:**
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-### Running the Game
-
 To start the game, execute the following command:
 
 ```bash
 python main.py
+```
 
 ### Game Controls
 
@@ -141,13 +104,13 @@ ConquestFour is built with a modular architecture:
 5. **System Monitoring**: Thermal-aware performance adjustment
 
 ```
-├── ai/               # AI and LLM integration
-├── game/             # Core game logic and minimax implementation
-├── ui/               # PyQt6 user interface
-├── speech_to_text/   # Speech recognition (optional)
-├── text_to_speech/   # Text-to-speech synthesis (optional)
-├── templates/        # Narrative templates
-└── assets/           # Game assets and images
+├── ai/                  # AI and LLM integration
+├── game/                # Core game logic and minimax implementation
+├── ui/                  # PyQt6 user interface
+├── speech_to_text/      # Speech recognition (optional)
+├── text_to_speech/      # Text-to-speech synthesis (optional)
+├── templates/           # Narrative templates
+└── assets/              # Game assets and images
 ```
 
 ## Planned Features
