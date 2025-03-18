@@ -1,6 +1,5 @@
-# llm-conquestfour
-On-Device AI Hackathon co-hosted by Qualcomm Technologies, Microsoft, and Northeastern University
 # ConquestFour: AI-Powered Narrative Connect Four
+On-Device AI Hackathon co-hosted by Qualcomm Technologies, Microsoft, and Northeastern University
 
 ![ConquestFour Logo](assets/images/logo.png)
 
@@ -84,9 +83,46 @@ See [Windows Setup Guide](demo/WINDOWS_SETUP.md) for detailed instructions.
 
 ### Starting the Game
 
+# Game Title (Replace with your actual game title)
+
+## Getting Started
+
+This section outlines how to set up and run the game.
+
+### Prerequisites
+
+* Python (Specify version if necessary, e.g., Python 3.8+)
+* pip (Python package installer)
+
+### Installation
+
+1.  **Clone the repository:**
+
+    ```bash
+    git clone [repository URL]
+    cd [repository directory]
+    ```
+
+2.  **Create and activate a virtual environment (recommended):**
+
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On macOS/Linux
+    venv\Scripts\activate  # On Windows
+    ```
+
+3.  **Install dependencies:**
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+### Running the Game
+
+To start the game, execute the following command:
+
 ```bash
 python main.py
-```
 
 ### Game Controls
 
