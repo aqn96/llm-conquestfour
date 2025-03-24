@@ -1,7 +1,6 @@
 # ConquestFour: AI-Powered Narrative Connect Four
-## Won Second Place out of 28 teams and the People's Choice Award
 
-*On-Device AI Hackathon co-hosted by Qualcomm Technologies, Microsoft, and Northeastern University*
+*On-Device AI Hackathon co-hosted by Qualcomm Technologies, Microsoft, and Northeastern University. Won Second Place out of 28 teams and the People's Choice Award*
 
 A narrative-driven Connect Four game powered by local LLMs that react to your moves with dynamic storytelling.
 
