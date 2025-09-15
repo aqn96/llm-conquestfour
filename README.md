@@ -4,6 +4,9 @@
 
 A narrative-driven Connect Four game powered by local LLMs that react to your moves with dynamic storytelling.
 
+## Demo
+[![LLM Connect Four Demo](assets/llm_connect4.gif)](https://youtu.be/iSGfIkLKz3M)
+
 ## Overview
 
 ConquestFour transforms the classic Connect Four game into an immersive narrative experience using local large language models. Instead of reinventing the wheel, we've enhanced a familiar game with AI-powered storytelling that runs entirely on your device - no internet connection required!
