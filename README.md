@@ -137,21 +137,24 @@ See [docs/baseline_performance.md](docs/baseline_performance.md) for detailed be
 
 ### Apple Neural Engine Acceleration (Apple Silicon Only)
 
-For M1/M2/M3 Mac users, you can enable Neural Engine acceleration for 40-60% faster inference:
+For M1/M2/M3 Mac users, ONNX + CoreML approach was tested but found incompatible with LLMs (only 3.8% operator coverage). 
 
-1. **Verify Neural Engine support**:
+**Current Status**: Your baseline already uses the optimal stack (llama.cpp + Metal GPU).
+
+**To improve performance further**:
+
+1. **Try smaller model** (2-3x speedup):
    ```bash
-   python ai/onnx_runtime/verify_ane.py
+   ollama pull phi3:mini
+   # Edit main.py line 148: change "mistral" to "phi3:mini"
    ```
 
-2. **Convert model to ONNX** (one-time setup):
+2. **Run POC test** to see CoreML limitations:
    ```bash
-   python ai/onnx_runtime/convert_mistral_to_onnx.py --model-size small
+   python ai/onnx_runtime/poc_neural_engine.py
    ```
 
-3. **Enable ONNX mode** in game settings (UI toggle)
-
-See [docs/onnx_neural_engine_implementation.md](docs/onnx_neural_engine_implementation.md) for details.
+See [docs/lessons_learned_onnx_coreml.md](docs/lessons_learned_onnx_coreml.md) for technical details.
 
 ## Planned Features
 
