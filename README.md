@@ -131,7 +131,7 @@ ConquestFour is built with a modular architecture:
 | Ollama (CPU) | 5.55s ± 0.38s | Baseline | CPU only |
 | ONNX + ANE | *In Progress* | Target: 60% | Neural Engine |
 
-See [docs/BASELINE_PERFORMANCE.md](docs/BASELINE_PERFORMANCE.md) for detailed benchmarks.
+See [docs/baseline_performance.md](docs/baseline_performance.md) for detailed benchmarks.
 
 ## Advanced Features
 
@@ -151,7 +151,7 @@ For M1/M2/M3 Mac users, you can enable Neural Engine acceleration for 40-60% fas
 
 3. **Enable ONNX mode** in game settings (UI toggle)
 
-See [docs/ONNX_NEURAL_ENGINE_IMPLEMENTATION.md](docs/ONNX_NEURAL_ENGINE_IMPLEMENTATION.md) for details.
+See [docs/onnx_neural_engine_implementation.md](docs/onnx_neural_engine_implementation.md) for details.
 
 ## Planned Features
 
