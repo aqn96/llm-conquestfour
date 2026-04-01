@@ -159,7 +159,10 @@ class Connect4GameWindow(QMainWindow):
     def push_opening_narrative(self):
         """Kick off a concise opening beat so narrative has clear premise."""
         try:
-            opening = self.bot.get_response_to_speech(self.narrative_director.opening_prompt())
+            if hasattr(self.bot, "get_response_to_directive"):
+                opening = self.bot.get_response_to_directive(self.narrative_director.opening_prompt())
+            else:
+                opening = self.bot.get_response_to_speech(self.narrative_director.opening_prompt())
             self.chat_display.append(opening)
             self.chat_display.append("\n")
         except Exception as exc:
@@ -189,9 +192,11 @@ class Connect4GameWindow(QMainWindow):
         print(f"Updated Event: {self.event}")  # debugging
         start = time.perf_counter()
         try:
-            bot_reply = self.bot.get_response_to_speech(
-                self.narrative_director.build_move_prompt(self.event)
-            )
+            directive = self.narrative_director.build_move_prompt(self.event)
+            if hasattr(self.bot, "get_response_to_directive"):
+                bot_reply = self.bot.get_response_to_directive(directive)
+            else:
+                bot_reply = self.bot.get_response_to_speech(directive)
         except Exception as exc:
             bot_reply = f"Bot error while reacting to move: {exc}"
         if self.perf_log:
@@ -204,7 +209,10 @@ class Connect4GameWindow(QMainWindow):
     def on_game_end(self, result):
         """Add a closing narrative beat when game outcome is known."""
         try:
-            closing = self.bot.get_response_to_speech(self.narrative_director.ending_prompt(result))
+            if hasattr(self.bot, "get_response_to_directive"):
+                closing = self.bot.get_response_to_directive(self.narrative_director.ending_prompt(result))
+            else:
+                closing = self.bot.get_response_to_speech(self.narrative_director.ending_prompt(result))
             self.chat_display.append(closing)
             self.chat_display.append("\n")
         except Exception as exc:

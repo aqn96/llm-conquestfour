@@ -86,6 +86,26 @@ class LLMBot:
         # Normalize whitespace to avoid odd line wraps.
         text = re.sub(r"\s+", " ", text).strip()
 
+        # Remove prompt-echo artifacts from hidden narrative directives.
+        artifacts = [
+            f"{self.__opponent_name}: Story premise:",
+            "Story premise:",
+            "Current phase:",
+            "Move quality:",
+        ]
+        for marker in artifacts:
+            idx = text.lower().find(marker.lower())
+            if idx != -1:
+                text = text[:idx].strip()
+
+        # Force first-person self-reference for bot narration.
+        # Replace explicit bot-name references with first-person pronouns.
+        name = re.escape(self.__name)
+        text = re.sub(rf"\b{name}'s\b", "my", text, flags=re.IGNORECASE)
+        text = re.sub(rf"(^|[.!?]\s+){name}\b", r"\1I", text, flags=re.IGNORECASE)
+        text = re.sub(rf"\b{name}\b", "I", text, flags=re.IGNORECASE)
+        text = re.sub(r"\bmy\b", lambda m: "My" if m.start() == 0 else "my", text)
+
         # Prefer trimming to the last complete sentence if output was cut.
         sentence_endings = [text.rfind("."), text.rfind("!"), text.rfind("?")]
         last_end = max(sentence_endings)
@@ -118,6 +138,7 @@ class LLMBot:
             "Respond to the player with creative, vivid language in one paragraph at most "
             "(2-4 sentences, under 80 words). Keep it concise and coherent. "
             "End with a complete sentence (no cut-off ending). "
+            "Use first-person voice for yourself (I/me/my), never refer to yourself by your name. "
             "Only generate your words or actions. Do not generate label text such as "
             "'{bot_name}: ' or '{username}: ' in the beginning of responses.\n"
         )
@@ -168,6 +189,33 @@ class LLMBot:
             elapsed_ms = (time.perf_counter() - start) * 1000
             print(
                 f"[perf] llm_chat_ms={elapsed_ms:.1f} "
+                f"history_entries={len(self.__history_entries)} "
+                f"history_chars={len(self.__chat_history)}"
+            )
+        return result
+
+    def get_response_to_directive(self, directive: str):
+        """
+        Generate a response from an internal directive without storing it as user chat text.
+        This prevents hidden control prompts from leaking into visible conversation history.
+        """
+        start = time.perf_counter()
+        raw = self.__chain.invoke({
+                "username" : self.__opponent_name,
+                "history": self.__chat_history,
+                "user_input": directive,
+                "bot_name": self.__name,
+                "game": self.__game_name
+            })
+        result = self.__name + ": " + self.__normalize_response(raw)
+
+        # Keep only bot output for continuity; do not append the hidden directive.
+        self.__last_bot_text = result
+        self.__append_history(result)
+        if self.__perf_log:
+            elapsed_ms = (time.perf_counter() - start) * 1000
+            print(
+                f"[perf] llm_directive_ms={elapsed_ms:.1f} "
                 f"history_entries={len(self.__history_entries)} "
                 f"history_chars={len(self.__chat_history)}"
             )
