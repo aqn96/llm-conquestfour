@@ -72,10 +72,15 @@ class Connect4Board(QWidget):
         if isinstance(event, QMouseEvent) and self.current_player == "red":
             for col in range(7):
                 if obj == self.board_buttons[0][col]:  # Only allow clicking top row
-                    if event.type() == QEvent.Type.MouseButtonPress:
-                        return self.on_mouse_press(col)
-                    elif event.type() == QEvent.Type.MouseButtonRelease:
-                        return self.on_mouse_release(event, col)
+                    try:
+                        if event.type() == QEvent.Type.MouseButtonPress:
+                            return self.on_mouse_press(col)
+                        elif event.type() == QEvent.Type.MouseButtonRelease:
+                            return self.on_mouse_release(event, col)
+                    except Exception as exc:
+                        print(f"Mouse event handling failed: {exc}")
+                        self.reset_top_button(self.current_column)
+                        return True
         return super().eventFilter(obj, event)
 
     def on_mouse_press(self, col):
@@ -87,13 +92,18 @@ class Connect4Board(QWidget):
 
     def on_mouse_release(self, event, col):
         """ Drop the disk if released in the same column and top row, otherwise remove it."""
-        release_pos = event.globalPosition()  # Get global coordinates
+        release_pos = event.globalPosition().toPoint()  # PyQt6 globalPosition returns QPointF
 
         board_pos = self.mapFromGlobal(release_pos)  # Convert to board-local position
         release_col = int(board_pos.x() // (60 + 10))  # Convert X position to column index
         release_row = int(board_pos.y() // (60 + 10))  # Convert Y position to row index
 
-        if release_row == 0 and release_col == self.current_column and self.game_logic.is_valid_move(release_col):
+        if (
+            0 <= release_col < 7
+            and release_row == 0
+            and release_col == self.current_column
+            and self.game_logic.is_valid_move(release_col)
+        ):
             self.drop_piece(release_col)
         else:
             self.reset_top_button(self.current_column)
@@ -148,4 +158,6 @@ class Connect4Board(QWidget):
 
     def reset_top_button(self, col):
         """ Reset the top row button color if not dropped. """
+        if col is None or not 0 <= col < 7:
+            return
         self.board_buttons[0][col].setStyleSheet("background-color: lightgrey; border: 2px solid grey; font-size: 20px")

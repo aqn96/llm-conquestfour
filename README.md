@@ -190,6 +190,17 @@ See [docs/lessons_learned_onnx_coreml.md](docs/lessons_learned_onnx_coreml.md) f
 - **"Connection refused" error**: Make sure Ollama is running (`ollama serve`)
 - **"Model 'mistral' not found"**: Download the model (`ollama pull mistral`)
 - **Performance issues**: Check system temperature, the game will automatically reduce computational load
+- **macOS crash (`Abort trap: 6`) while clicking board/chat**:
+  - This is typically a PyQt callback exception path, not an ONNX/CoreML conversion problem.
+  - A fix was applied for PyQt6 mouse event handling and unhandled bot-call exceptions in UI slots.
+  - See [docs/pyqt_crash_fix_2026-03-31.md](docs/pyqt_crash_fix_2026-03-31.md) for root cause and patch details.
+
+### ONNX/CoreML Clarification
+
+If you previously saw ONNX/CoreML errors, those are a separate class of issue:
+
+- ONNX/CoreML limitations in this repo relate to operator coverage and tensor constraints for LLMs.
+- The `SIGABRT` crash fixed above was caused by UI event/exception handling in PyQt, not by ONNX conversion.
 
 ## Contributing
 

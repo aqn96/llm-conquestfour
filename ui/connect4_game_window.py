@@ -168,7 +168,11 @@ class Connect4GameWindow(QMainWindow):
         """ ✅ Update event when a move is made """
         self.event = move_score
         print(f"Updated Event: {self.event}")  # debugging
-        self.chat_display.append(self.bot.get_response_to_speech(f"Player makes a {self.event} move!"))
+        try:
+            bot_reply = self.bot.get_response_to_speech(f"Player makes a {self.event} move!")
+        except Exception as exc:
+            bot_reply = f"Bot error while reacting to move: {exc}"
+        self.chat_display.append(bot_reply)
         self.chat_display.append(f"\n")
         self.chat_display.toPlainText()
 
@@ -185,7 +189,11 @@ class Connect4GameWindow(QMainWindow):
             self.chat_display.append(f"You: {user_input}")
             self.chat_input.clear()
             self.chat_display.append(f"\n")
-            self.chat_display.append(self.bot.get_response_to_speech(user_input))
+            try:
+                bot_reply = self.bot.get_response_to_speech(user_input)
+            except Exception as exc:
+                bot_reply = f"Bot error while generating response: {exc}"
+            self.chat_display.append(bot_reply)
             self.chat_display.append(f"\n")
 
         self.chat_display.toPlainText()
