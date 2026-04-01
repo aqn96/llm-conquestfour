@@ -152,6 +152,16 @@ Interpretation:
 - The game logic path is fast and stable.
 - Most variance comes from LLM output length/style and prompt complexity, not minimax.
 
+### Narration Policy (Latency/Memory Tradeoff)
+
+- The app uses **one LLM narrator voice** (`Gemma`) for move-by-move storytelling.
+- If player reactions are added, prefer **rule-based templates** for `good`/`mediocre`/`bad` events.
+- Avoid a second per-move LLM call for "Andrew replies" by default:
+  - doubles token generation load,
+  - increases latency variance,
+  - grows history faster and can cause style drift.
+- Reserve LLM player text for explicit user input (typed or spoken chat).
+
 ### Platform Guidance
 
 - **macOS (Apple Silicon)**: Prefer `Ollama + llama.cpp + Metal` (default in this repo).

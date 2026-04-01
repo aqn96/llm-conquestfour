@@ -54,3 +54,20 @@ Instrumentation shows minimax is not the latency bottleneck:
 - Keep responses short (2-4 sentences) for lower latency and better consistency.
 - Use move-quality guidance to make reactions feel grounded in gameplay.
 - Keep history bounded to avoid prompt bloat and style drift.
+
+## Player-Reaction Design Choice
+
+Question: should the human side also auto-generate a response every move?
+
+Recommended default:
+- Keep Gemma as the only per-move LLM narrator.
+- Use template/rule-based player reactions (optional) keyed on move quality.
+
+Why:
+- A second per-move LLM call usually doubles generation cost and pushes latency up.
+- It accelerates chat-history growth, increasing memory use and context drift.
+- It can reduce narrative coherence by introducing competing generated voices.
+
+When to use LLM player text:
+- Only when the user explicitly types or speaks a message.
+- Optionally in "cinematic mode" behind a feature flag with tighter token limits.

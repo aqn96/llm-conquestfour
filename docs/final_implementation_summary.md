@@ -121,6 +121,18 @@ Result:
 - Responses are shorter and cleaner.
 - Story continuity is better across full games.
 
+### Option 5: Dual-Voice Autoreply (Deferred by Design)
+
+- Considered auto-generating both narrator and player lines each move.
+- Deferred for default mode due to throughput and memory cost.
+
+Decision:
+- Keep single-voice narration (`Gemma`) per move.
+- Add optional rule-based player reactions instead of extra LLM calls.
+
+Reason:
+- Extra per-move LLM calls increase latency and history growth with limited gameplay value.
+
 ---
 
 ## What To Document in Resume
