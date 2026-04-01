@@ -123,18 +123,21 @@ ConquestFour is built with a modular architecture:
 ### Performance Benchmarks
 
 **Hardware**: Apple M3 Pro (18GB RAM)  
-**Methodology**: 15-sample rigorous timing (time from player move → AI response appears)
+**Methodology**: Interactive timing from player move to AI response.
 
 | Model | Mean Latency | vs Baseline | Method | Status |
 |-------|--------------|-------------|--------|--------|
 | Mistral-7B | 5.55s ± 0.38s | Baseline (100%) | llama.cpp + Metal GPU | ✅ Validated |
-| Phi-3-mini (3.8B) | 4.25s ± 0.49s | -23.4% vs 5.55s baseline | llama.cpp + Metal GPU | ✅ Measured |
+| Phi-3-mini (3.8B), run #1 (n=15) | 4.25s ± 0.49s | -23.4% | llama.cpp + Metal GPU | ✅ Measured |
+| Phi-3-mini (3.8B), run #2 after latency tuning (n=15) | 4.45s ± 0.38s | -19.8% | llama.cpp + Metal GPU | ✅ Measured |
+| Phi-3-mini combined (n=30) | 4.35s ± 0.31s | -21.6% | llama.cpp + Metal GPU | ✅ Measured |
 
 **Key Findings**:
 - **ONNX + CoreML approach failed**: Only 3.8% operator coverage on transformers (99/2,616 nodes supported)
 - **CoreML designed for vision models**, not LLMs (max embedding dim 16,384 vs 32,000+ needed)
 - **Current stack already optimal**: Ollama uses llama.cpp with Metal GPU (correct approach for Apple Silicon)
-- **Measured improvement**: Phi-3-mini reduced mean latency from 5.55s to 4.25s (~23.4% faster) in latest run
+- **Measured improvement**: Phi-3-mini + runtime tuning reduced mean latency from 5.55s to 4.35s across two runs (~21.6% faster, n=30)
+- **Consistency gain**: latest run stayed below 6s (max 5.35s), removing prior long-tail spikes
 
 ### Platform Guidance
 

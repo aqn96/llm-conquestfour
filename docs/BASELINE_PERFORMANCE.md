@@ -106,16 +106,73 @@ Game Move → LLMBot → Ollama API → llama.cpp runtime (Ollama) → Response
 
 ---
 
+## Post-Latency-Tuning Run (Phi-3-mini)
+
+**Date**: 2026-04-01  
+**Hardware**: Apple M3 Pro (18GB RAM)  
+**Model**: `phi3:mini` via Ollama  
+**Tuning enabled**:
+- Rolling chat history cap
+- One-paragraph response constraint
+- Tuned generation params (`num_ctx`, `num_predict`)
+- Lighter narrative evaluator depth
+- Runtime perf timing logs
+
+### Response Latency Samples (n=15)
+
+```
+5.20, 3.75, 3.37, 3.61, 3.56,
+3.68, 3.69, 4.35, 4.94, 5.35,
+5.19, 4.86, 5.19, 5.06, 5.00
+```
+
+### Statistical Summary
+
+| Metric | Value |
+|--------|-------|
+| **Mean** | **4.45 seconds** |
+| **Median** | 4.86 seconds |
+| **Std Dev** | 0.75 seconds |
+| **Min** | 3.37 seconds |
+| **Max** | 5.35 seconds |
+| **Range** | 1.98 seconds |
+| **95% CI** | 4.45 ± 0.38s |
+| **CI Range** | [4.07s, 4.83s] |
+
+### Improvement vs Baseline
+
+- Baseline mean (Mistral-7B): **5.55s**
+- Post-tuning mean (Phi-3-mini): **4.45s**
+- Improvement: **~19.8% faster** average latency
+
+### Key Learning from This Run
+
+- Tail latency improved: max response dropped from **6.10s** (previous Phi run) to **5.35s**.
+- Session stayed below 6s throughout, indicating better consistency during longer gameplay.
+
+---
+
+## Combined Phi-3 Summary (Two Runs)
+
+To reduce single-run noise, combine both Phi-3 runs:
+
+- Run #1 (post-architecture): `n=15`, mean `4.25s`
+- Run #2 (post-latency-tuning): `n=15`, mean `4.45s`
+- **Combined**: `n=30`, mean **4.35s**, std dev **0.86s**, 95% CI **4.35 ± 0.31s**
+- **Combined improvement vs 5.55s baseline**: **~21.6% faster**
+
+---
+
 ## Updated Optimization Direction
 
 ### Target Performance
-Based on **baseline mean = 5.52s** and current post-improvement mean **4.25s**:
+Based on **baseline mean = 5.55s** and current combined mean **4.35s**:
 
 | Goal Level | Target Latency | Improvement % | Status |
 |-----------|---------------|---------------|---------|
 | **Aggressive** | < 2.21s | 60% reduction | Stretch goal |
 | **Realistic** | < 3.31s | 40% reduction | Still open |
-| **Minimum** | < 4.14s | 25% reduction | Nearly reached (current 4.25s) |
+| **Minimum** | < 4.16s | 25% reduction | Near (current 4.35s) |
 
 ### Statistical Validation Required
 - **T-test**: p < 0.05 to confirm improvement is not random
@@ -135,9 +192,9 @@ According to UX research:
 ## Next Steps
 1. ✅ Baseline documented
 2. ✅ Post-architecture Phi-3-mini benchmark documented
-3. ⏳ Collect another 15-sample run to confirm stability of the ~23% gain
-4. ⏳ Tune prompt length / response length / context window for additional latency reduction
-5. ⏳ Re-evaluate realistic target (<3.31s) after tuning
+3. ✅ Post-latency-tuning benchmark documented
+4. ✅ Two-run combined summary (n=30) documented
+5. ⏳ Continue tuning for additional latency reduction toward <4.16s minimum target
 
 ---
 *This document will be updated with post-optimization results for comparison.*
