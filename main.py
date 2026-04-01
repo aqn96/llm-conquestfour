@@ -186,7 +186,14 @@ class Connect4IntroUI(QMainWindow):
         print(f"Backend selection => requested={backend_choice} resolved={resolved_backend} hardware={hardware_profile}")
         QMessageBox.information(self, title, notice)
 
-        self.window2 = Connect4GameWindow(bot, difficulty, self)
+        self.window2 = Connect4GameWindow(
+            bot,
+            difficulty,
+            self,
+            theme=theme,
+            personality=ai_personality,
+            player_name=name or "Player",
+        )
         self.window2.show()
         self.close()
 

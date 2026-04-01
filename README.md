@@ -17,6 +17,7 @@ The game features an intelligent AI opponent that not only challenges your strat
 
 - **Intelligent AI Opponent**: Three difficulty levels (Easy, Medium, Hard) with different play styles
 - **Narrative Generation**: LLM provides contextual commentary on moves using Mistral-7B
+- **Narrative Director**: Story premise + opening/mid/end arc control driven by move quality signals
 - **🍎 Apple Silicon Optimized Path**: Stable inference via Ollama + llama.cpp + Metal GPU backend (tested on Apple M3 Pro)
 - **Optimized Inference**: INT8 quantization for reduced latency and memory usage
 - **Thermal Management**: Automatically detects system temperature and scales AI operations
@@ -138,6 +139,18 @@ ConquestFour is built with a modular architecture:
 - **Current stack already optimal**: Ollama uses llama.cpp with Metal GPU (correct approach for Apple Silicon)
 - **Measured improvement**: Phi-3-mini + runtime tuning reduced mean latency from 5.55s to 4.35s across two runs (~21.6% faster, n=30)
 - **Consistency gain**: latest run stayed below 6s (max 5.35s), removing prior long-tail spikes
+- **Where time goes**: minimax move/eval is typically sub-150ms; LLM generation dominates end-to-end latency
+
+### Instrumented Trace (Aggressive personality, n=15)
+
+From `[perf]` logs:
+- `llm_chat_ms`: mean `4011.8ms`, min `2965.8ms`, max `4933.8ms`, stdev `759.0ms`
+- `minimax_ai_move_ms`: mostly `0.5ms` to `133.7ms`
+- `minimax_eval_ms`: mostly `2.6ms` to `40.9ms`
+
+Interpretation:
+- The game logic path is fast and stable.
+- Most variance comes from LLM output length/style and prompt complexity, not minimax.
 
 ### Platform Guidance
 
@@ -200,6 +213,7 @@ Notes:
 
 See [docs/lessons_learned_onnx_coreml.md](docs/lessons_learned_onnx_coreml.md) for full technical analysis.
 For a deeper practical explanation, see [docs/onnx_coreml_deep_dive.md](docs/onnx_coreml_deep_dive.md).
+For narrative quality controls, see [docs/narrative_coherence.md](docs/narrative_coherence.md).
 
 ### Quick Learning Recap
 

@@ -14,6 +14,7 @@ from game.difficulty_levels import EasyAI, MediumAI, HardAI
 
 class Connect4Board(QWidget):
     moveMade = pyqtSignal(str) # Signal to pass move score to the main window
+    gameEnded = pyqtSignal(str)
     def __init__(self, difficulty, parent=None):
         super().__init__(parent)
         self.difficulty = difficulty
@@ -164,7 +165,18 @@ class Connect4Board(QWidget):
             msg_box.exec()
             self.setEnabled(False)
             self.game_over = True
+            self.gameEnded.emit(f"winner={winner_player}")
             return winner
+        if self.game_logic.is_draw():
+            msg_box = QMessageBox(self)
+            msg_box.setIcon(QMessageBox.Icon.Information)
+            msg_box.setWindowTitle("Game Over")
+            msg_box.setText("The game is a draw.\n")
+            msg_box.exec()
+            self.setEnabled(False)
+            self.game_over = True
+            self.gameEnded.emit("draw")
+            return "draw"
         return None
 
     def reset_top_button(self, col):

@@ -9,11 +9,12 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QPixmap, QFont, QAction
 from PyQt6.QtCore import Qt, QTimer
 from game.thermal_aware_ai import ThermalAwareAI
+from game.narrative_director import NarrativeDirector
 from speech_to_text.audio_recorder import AudioRecorder
 from speech_to_text.speech_to_text import SpeechToText
 
 class Connect4GameWindow(QMainWindow):
-    def __init__(self, bot, difficulty, start_window):
+    def __init__(self, bot, difficulty, start_window, *, theme="", personality="", player_name="Player"):
         super().__init__()
         self.bot = bot
         self.difficulty = difficulty
@@ -21,6 +22,12 @@ class Connect4GameWindow(QMainWindow):
         self.temperatureAI = ThermalAwareAI()
         self.event = ""
         self.perf_log = os.getenv("CONQUEST4_PERF_LOG", "1") != "0"
+        self.narrative_director = NarrativeDirector(
+            theme=theme,
+            personality=personality,
+            bot_name=getattr(self.bot, "get_name", lambda: "Gemma")(),
+            player_name=player_name,
+        )
         self.initUI()
         
 
@@ -73,6 +80,7 @@ class Connect4GameWindow(QMainWindow):
         # Board Container (500 x 500)
         self.game_board = Connect4Board(self.difficulty, self)
         self.game_board.moveMade.connect(self.update_event)
+        self.game_board.gameEnded.connect(self.on_game_end)
         bottom_layout.addWidget(self.game_board)
 
         # Chatbox Section
@@ -146,6 +154,16 @@ class Connect4GameWindow(QMainWindow):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_temperature)
         self.timer.start(1000)  # Update every second
+        self.push_opening_narrative()
+
+    def push_opening_narrative(self):
+        """Kick off a concise opening beat so narrative has clear premise."""
+        try:
+            opening = self.bot.get_response_to_speech(self.narrative_director.opening_prompt())
+            self.chat_display.append(opening)
+            self.chat_display.append("\n")
+        except Exception as exc:
+            self.chat_display.append(f"Bot error while creating opening narrative: {exc}\n")
     
     def process_speech(self):
         """ Records speech, transcribes it, and inserts into chat input field. """
@@ -171,7 +189,9 @@ class Connect4GameWindow(QMainWindow):
         print(f"Updated Event: {self.event}")  # debugging
         start = time.perf_counter()
         try:
-            bot_reply = self.bot.get_response_to_speech(self._build_move_event_prompt(self.event))
+            bot_reply = self.bot.get_response_to_speech(
+                self.narrative_director.build_move_prompt(self.event)
+            )
         except Exception as exc:
             bot_reply = f"Bot error while reacting to move: {exc}"
         if self.perf_log:
@@ -181,31 +201,14 @@ class Connect4GameWindow(QMainWindow):
         self.chat_display.append(f"\n")
         self.chat_display.toPlainText()
 
-    def _build_move_event_prompt(self, move_quality):
-        """Generate a controlled narrative cue for good/mediocre/bad moves."""
-        quality = (move_quality or "").strip().lower()
-        cues = {
-            "good": (
-                "The player made a strong tactical move. React with respect and tension, "
-                "and explain why this raises the stakes."
-            ),
-            "mediocre": (
-                "The player made an acceptable but not optimal move. React with balanced tone, "
-                "mention one opportunity they missed, and hint at next-turn consequences."
-            ),
-            "bad": (
-                "The player made a weak move. React with confident momentum, explain the opening "
-                "this creates, and foreshadow your advantage."
-            ),
-        }
-        cue = cues.get(
-            quality,
-            "The player made a move. React naturally to the board state and keep narrative continuity.",
-        )
-        return (
-            f"Move quality signal: {quality}. "
-            f"{cue} Keep the response to one short paragraph with complete sentences."
-        )
+    def on_game_end(self, result):
+        """Add a closing narrative beat when game outcome is known."""
+        try:
+            closing = self.bot.get_response_to_speech(self.narrative_director.ending_prompt(result))
+            self.chat_display.append(closing)
+            self.chat_display.append("\n")
+        except Exception as exc:
+            self.chat_display.append(f"Bot error while creating ending narrative: {exc}\n")
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
