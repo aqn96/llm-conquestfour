@@ -16,6 +16,33 @@ The ONNX/CoreML path remains **experimental/research-only** for LLM inference be
 
 ---
 
+## Team Learnings Recap (Plain English)
+
+This captures the practical understanding from our investigation:
+
+1. ONNX is an interchange format:
+   - ONNX means **Open Neural Network Exchange**.
+   - It helps export models from one framework and run them in another runtime.
+   - Performance still depends on the target execution provider and hardware backend.
+
+2. The Apple hardware split matters:
+   - **GPU + Metal**: best fit for transformer LLM matrix-heavy inference.
+   - **Neural Engine (NPU)**: best for small, fixed-shape, low-power ML workloads.
+
+3. Our stable runtime path:
+   - We do **not** use CoreML/NPU in the stable path.
+   - We use **Ollama + llama.cpp + Metal GPU**.
+
+4. Important correction:
+   - This is **not** "CPU bare-metal inference."
+   - Heavy compute is offloaded to the **GPU** through Metal; CPU orchestrates control flow.
+
+5. eBPF is unrelated:
+   - llama.cpp does not use eBPF.
+   - eBPF is a Linux kernel observability/networking technology, not a macOS GPU inference path.
+
+---
+
 ## What "Ops" Means
 
 "Ops" means model graph operations (nodes), such as:
@@ -94,4 +121,3 @@ LLMs are transformer-heavy and involve significantly more complex attention-cent
 1. Use `Auto (Recommended)` backend in UI for production usage.
 2. Use experimental NPU mode only for testing/research.
 3. Prioritize model-size/runtime tuning on stable path (for example `phi3:mini`) for latency improvements.
-

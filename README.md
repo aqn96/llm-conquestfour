@@ -192,6 +192,14 @@ Notes:
 See [docs/lessons_learned_onnx_coreml.md](docs/lessons_learned_onnx_coreml.md) for full technical analysis.
 For a deeper practical explanation, see [docs/onnx_coreml_deep_dive.md](docs/onnx_coreml_deep_dive.md).
 
+### Quick Learning Recap
+
+- ONNX is a model exchange format, not a guaranteed performance layer by itself.
+- For this app's LLM inference on Apple Silicon, **GPU via Metal** is the stable path.
+- The stable runtime here is **Ollama + llama.cpp + Metal** (not CoreML/NPU).
+- This path is GPU-accelerated (not CPU-only "bare metal").
+- eBPF is unrelated to this inference stack.
+
 ## Planned Features
 
 - **Voice Integration**: Speech-to-text and text-to-speech for natural conversation
