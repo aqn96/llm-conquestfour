@@ -128,13 +128,19 @@ ConquestFour is built with a modular architecture:
 | Model | Mean Latency | vs Baseline | Method | Status |
 |-------|--------------|-------------|--------|--------|
 | Mistral-7B | 5.55s ± 0.38s | Baseline (100%) | llama.cpp + Metal GPU | ✅ Validated |
-| Phi-3-mini (3.8B) | *Testing* | Target: <2.22s (-60%) | llama.cpp + Metal GPU | 🧪 In Progress |
+| Phi-3-mini (3.8B) | 4.25s ± 0.49s | -23.4% vs 5.55s baseline | llama.cpp + Metal GPU | ✅ Measured |
 
 **Key Findings**:
 - **ONNX + CoreML approach failed**: Only 3.8% operator coverage on transformers (99/2,616 nodes supported)
 - **CoreML designed for vision models**, not LLMs (max embedding dim 16,384 vs 32,000+ needed)
 - **Current stack already optimal**: Ollama uses llama.cpp with Metal GPU (correct approach for Apple Silicon)
-- **Speedup via model size**: Smaller models (Phi-3-mini) provide 2-3x speedup while maintaining quality
+- **Measured improvement**: Phi-3-mini reduced mean latency from 5.55s to 4.25s (~23.4% faster) in latest run
+
+### Platform Guidance
+
+- **macOS (Apple Silicon)**: Prefer `Ollama + llama.cpp + Metal` (default in this repo).
+- **Windows/Linux**: ONNX can be a good deployment path when paired with a strong execution provider (for example TensorRT/CUDA/DirectML), but performance depends on provider coverage for transformer ops.
+- **This repo's ONNX/CoreML path** remains experimental/research-only for LLMs on macOS.
 
 See [docs/baseline_performance.md](docs/baseline_performance.md) and [docs/lessons_learned_onnx_coreml.md](docs/lessons_learned_onnx_coreml.md) for details.
 

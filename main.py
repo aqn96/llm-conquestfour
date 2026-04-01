@@ -223,6 +223,5 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = Connect4IntroUI()
     window.show()
-    window.start_button.clicked.connect(window.start_game)
     
     sys.exit(app.exec())

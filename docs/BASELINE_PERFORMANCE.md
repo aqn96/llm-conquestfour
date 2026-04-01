@@ -56,11 +56,11 @@ Sample 15:  4.79s
 
 ### Current Architecture
 ```
-Game Move → LLMBot → Ollama API → Mistral-7B → CPU Inference → Response
+Game Move → LLMBot → Ollama API → llama.cpp runtime (Ollama) → Response
 ```
 
 ### Key Characteristics
-- **Execution**: CPU-only (no GPU/NPU acceleration)
+- **Execution**: Ollama runtime (processor depends on runtime state; Apple Silicon typically uses Metal GPU)
 - **Model Format**: Ollama native format (not ONNX)
 - **Quantization**: Ollama's default (likely 4-bit)
 - **Memory**: ~4.4 GB model size on disk
@@ -70,21 +70,57 @@ Game Move → LLMBot → Ollama API → Mistral-7B → CPU Inference → Respons
 - **Multiplayer**: Would feel sluggish for real-time multiplayer gameplay
 - **UI Responsiveness**: Need to verify if UI freezes during inference
 
-## Optimization Goals
+## Post-Architecture Improvement Run (Phi-3-mini)
 
-### Target Performance (ONNX + Neural Engine)
-Based on **baseline mean = 5.52s**, our targets are:
+**Date**: 2026-04-01  
+**Hardware**: Apple M3 Pro (18GB RAM)  
+**Model**: `phi3:mini` via Ollama  
+**Observed runtime**: `ollama ps` showed `PROCESSOR = 100% GPU`
+
+### Response Latency Samples (n=15)
+
+```
+3.63, 3.61, 4.09, 3.81, 6.00,
+4.80, 4.23, 4.88, 6.10, 3.82,
+3.29, 3.09, 3.03, 4.03, 5.32
+```
+
+### Statistical Summary
+
+| Metric | Value |
+|--------|-------|
+| **Mean** | **4.25 seconds** |
+| **Median** | 4.03 seconds |
+| **Std Dev** | 0.98 seconds |
+| **Min** | 3.03 seconds |
+| **Max** | 6.10 seconds |
+| **Range** | 3.07 seconds |
+| **95% CI** | 4.25 ± 0.49s |
+| **CI Range** | [3.75s, 4.74s] |
+
+### Improvement vs Baseline
+
+- Baseline mean (Mistral-7B): **5.52–5.55s**
+- Post-improvement mean (Phi-3-mini): **4.25s**
+- Improvement: **~23% faster** average latency
+
+---
+
+## Updated Optimization Direction
+
+### Target Performance
+Based on **baseline mean = 5.52s** and current post-improvement mean **4.25s**:
 
 | Goal Level | Target Latency | Improvement % | Status |
 |-----------|---------------|---------------|---------|
-| **Aggressive** | < 2.21s | 60% reduction | Resume claim target ✨ |
-| **Realistic** | < 3.31s | 40% reduction | Industry standard |
-| **Minimum** | < 4.14s | 25% reduction | Acceptable gain |
+| **Aggressive** | < 2.21s | 60% reduction | Stretch goal |
+| **Realistic** | < 3.31s | 40% reduction | Still open |
+| **Minimum** | < 4.14s | 25% reduction | Nearly reached (current 4.25s) |
 
 ### Statistical Validation Required
 - **T-test**: p < 0.05 to confirm improvement is not random
 - **Effect size**: Cohen's d > 0.8 for "large" improvement
-- **Consistency**: ONNX std dev ≤ baseline std dev (0.67s)
+- **Consistency**: Reduced variance in interactive gameplay runs
 
 ### Why These Numbers Matter
 According to UX research:
@@ -98,10 +134,10 @@ According to UX research:
 
 ## Next Steps
 1. ✅ Baseline documented
-2. ⏳ Implement ONNX Runtime with CoreML Execution Provider
-3. ⏳ Integrate Apple Neural Engine acceleration
-4. ⏳ Re-test with identical gameplay scenarios
-5. ⏳ Compare results and validate improvements
+2. ✅ Post-architecture Phi-3-mini benchmark documented
+3. ⏳ Collect another 15-sample run to confirm stability of the ~23% gain
+4. ⏳ Tune prompt length / response length / context window for additional latency reduction
+5. ⏳ Re-evaluate realistic target (<3.31s) after tuning
 
 ---
 *This document will be updated with post-optimization results for comparison.*
