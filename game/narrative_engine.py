@@ -42,9 +42,6 @@ class MoveEvaluator:
         # Create a copy of the game to avoid modifying the original
         game_copy = game.copy()
         
-        # Find the best move according to minimax
-        best_move = self.minimax_engine.find_best_move(game_copy)
-        
         # Get all possible moves and rank them
         valid_moves = game_copy.get_valid_columns()
         move_scores = []
