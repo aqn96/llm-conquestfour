@@ -2,6 +2,7 @@
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
 import os
+import re
 import time
 
 from ai.ollama.personality import personality_dict as p_dict
@@ -67,6 +68,33 @@ class LLMBot:
         if len(self.__history_entries) > self.__max_history_entries:
             self.__history_entries = self.__history_entries[-self.__max_history_entries:]
         self.__chat_history = "\n\n".join(self.__history_entries)
+
+    def __normalize_response(self, raw_text):
+        """Clean up model output so UI gets a complete, readable sentence block."""
+        text = (raw_text or "").strip()
+        if not text:
+            return "Let's keep playing."
+
+        # Remove accidental speaker prefixes.
+        lowered = text.lower()
+        bot_prefix = f"{self.__name.lower()}:"
+        if lowered.startswith(bot_prefix):
+            text = text[len(self.__name) + 1 :].strip()
+        elif lowered.startswith("assistant:"):
+            text = text[len("assistant:") :].strip()
+
+        # Normalize whitespace to avoid odd line wraps.
+        text = re.sub(r"\s+", " ", text).strip()
+
+        # Prefer trimming to the last complete sentence if output was cut.
+        sentence_endings = [text.rfind("."), text.rfind("!"), text.rfind("?")]
+        last_end = max(sentence_endings)
+        if last_end >= max(40, int(len(text) * 0.45)):
+            text = text[: last_end + 1].strip()
+        elif text and text[-1] not in ".!?":
+            text = text + "."
+
+        return text
     
     def __initialize_template(self):
         self.set_template(
@@ -88,7 +116,8 @@ class LLMBot:
         self.__template += p_dict.get(personality_key, "This describes your personality: " + personality_key) + "\n"
         self.__template += (
             "Respond to the player with creative, vivid language in one paragraph at most "
-            "(2-5 sentences). Keep it concise. "
+            "(2-4 sentences, under 80 words). Keep it concise and coherent. "
+            "End with a complete sentence (no cut-off ending). "
             "Only generate your words or actions. Do not generate label text such as "
             "'{bot_name}: ' or '{username}: ' in the beginning of responses.\n"
         )
@@ -98,14 +127,14 @@ class LLMBot:
 
     def get_response_to_event(self, event:str):
         start = time.perf_counter()
-        result = self.__name + ": " + \
-            self.__chain.invoke({
+        raw = self.__chain.invoke({
                 "username" : self.__opponent_name, 
                 "history":self.__chat_history, 
                 "user_input": event, 
                 "bot_name":self.__name, 
                 "game":self.__game_name
             })
+        result = self.__name + ": " + self.__normalize_response(raw)
         
         self.__last_event = event
         self.__last_bot_text = result
@@ -122,14 +151,14 @@ class LLMBot:
     
     def get_response_to_speech(self, message:str):
         start = time.perf_counter()
-        result = self.__name + ": " + \
-            self.__chain.invoke({
+        raw = self.__chain.invoke({
                 "username" : self.__opponent_name, 
                 "history":self.__chat_history, 
                 "user_input": message, 
                 "bot_name":self.__name, 
                 "game":self.__game_name
             })
+        result = self.__name + ": " + self.__normalize_response(raw)
         
         self.__last_user_text = self.__opponent_name + ": " + message
         self.__last_bot_text = result

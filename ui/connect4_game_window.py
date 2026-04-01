@@ -171,7 +171,7 @@ class Connect4GameWindow(QMainWindow):
         print(f"Updated Event: {self.event}")  # debugging
         start = time.perf_counter()
         try:
-            bot_reply = self.bot.get_response_to_speech(f"Player makes a {self.event} move!")
+            bot_reply = self.bot.get_response_to_speech(self._build_move_event_prompt(self.event))
         except Exception as exc:
             bot_reply = f"Bot error while reacting to move: {exc}"
         if self.perf_log:
@@ -180,6 +180,32 @@ class Connect4GameWindow(QMainWindow):
         self.chat_display.append(bot_reply)
         self.chat_display.append(f"\n")
         self.chat_display.toPlainText()
+
+    def _build_move_event_prompt(self, move_quality):
+        """Generate a controlled narrative cue for good/mediocre/bad moves."""
+        quality = (move_quality or "").strip().lower()
+        cues = {
+            "good": (
+                "The player made a strong tactical move. React with respect and tension, "
+                "and explain why this raises the stakes."
+            ),
+            "mediocre": (
+                "The player made an acceptable but not optimal move. React with balanced tone, "
+                "mention one opportunity they missed, and hint at next-turn consequences."
+            ),
+            "bad": (
+                "The player made a weak move. React with confident momentum, explain the opening "
+                "this creates, and foreshadow your advantage."
+            ),
+        }
+        cue = cues.get(
+            quality,
+            "The player made a move. React naturally to the board state and keep narrative continuity.",
+        )
+        return (
+            f"Move quality signal: {quality}. "
+            f"{cue} Keep the response to one short paragraph with complete sentences."
+        )
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
