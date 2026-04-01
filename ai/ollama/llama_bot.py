@@ -2,6 +2,7 @@
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
 import os
+import time
 
 from ai.ollama.personality import personality_dict as p_dict
 from ai.ollama.personality import occupation_dict as o_dict
@@ -30,6 +31,11 @@ class LLMBot:
         self.__name = name
         self.__game_name = game_name
         self.__chat_history = history
+        self.__history_entries = []
+        if history:
+            self.__history_entries.append(history)
+        self.__max_history_entries = int(os.getenv("CONQUEST4_MAX_HISTORY_ENTRIES", "12"))
+        self.__perf_log = os.getenv("CONQUEST4_PERF_LOG", "1") != "0"
         self.__opponent_name = opponent_name
         self.__personality = personality_key
         self.__occupation = occupation_key
@@ -47,7 +53,20 @@ class LLMBot:
         :param model_name: specify which Ollama model to load as String
         :return: model object
         """
-        return OllamaLLM(model=model_name)
+        return OllamaLLM(
+            model=model_name,
+            num_ctx=int(os.getenv("CONQUEST4_NUM_CTX", "2048")),
+            num_predict=int(os.getenv("CONQUEST4_NUM_PREDICT", "120")),
+            temperature=float(os.getenv("CONQUEST4_TEMPERATURE", "0.8")),
+            top_p=float(os.getenv("CONQUEST4_TOP_P", "0.9")),
+        )
+
+    def __append_history(self, entry):
+        """Append one chat entry and keep a rolling history window."""
+        self.__history_entries.append(entry)
+        if len(self.__history_entries) > self.__max_history_entries:
+            self.__history_entries = self.__history_entries[-self.__max_history_entries:]
+        self.__chat_history = "\n\n".join(self.__history_entries)
     
     def __initialize_template(self):
         self.set_template(
@@ -67,12 +86,18 @@ class LLMBot:
         self.__template += s_dict.get(setting_key, "This describes the setting: " + setting_key) + "\n"
         self.__template += o_dict.get(occupation_key, "This describes your occupation: " + occupation_key) + "\n"
         self.__template += p_dict.get(personality_key, "This describes your personality: " + personality_key) + "\n"
-        self.__template += "Respond to the player. Only generate your words or actions. Do not generate label text such as '{bot_name}: ' or '{username}: ' in the beginning of responses.\n"
+        self.__template += (
+            "Respond to the player with creative, vivid language in one paragraph at most "
+            "(2-5 sentences). Keep it concise. "
+            "Only generate your words or actions. Do not generate label text such as "
+            "'{bot_name}: ' or '{username}: ' in the beginning of responses.\n"
+        )
         self.__game_setup = self.__template
         self.__template += "Here is the chat history {history}.\n"
         self.__template += "{username}: {user_input}"
 
     def get_response_to_event(self, event:str):
+        start = time.perf_counter()
         result = self.__name + ": " + \
             self.__chain.invoke({
                 "username" : self.__opponent_name, 
@@ -84,10 +109,19 @@ class LLMBot:
         
         self.__last_event = event
         self.__last_bot_text = result
-        self.__chat_history+= self.__last_event + "\n\n" + result + "\n\n"
+        self.__append_history(self.__last_event)
+        self.__append_history(result)
+        if self.__perf_log:
+            elapsed_ms = (time.perf_counter() - start) * 1000
+            print(
+                f"[perf] llm_event_ms={elapsed_ms:.1f} "
+                f"history_entries={len(self.__history_entries)} "
+                f"history_chars={len(self.__chat_history)}"
+            )
         return result
     
     def get_response_to_speech(self, message:str):
+        start = time.perf_counter()
         result = self.__name + ": " + \
             self.__chain.invoke({
                 "username" : self.__opponent_name, 
@@ -99,7 +133,15 @@ class LLMBot:
         
         self.__last_user_text = self.__opponent_name + ": " + message
         self.__last_bot_text = result
-        self.__chat_history+= self.__last_user_text + "\n\n" + result + "\n\n"
+        self.__append_history(self.__last_user_text)
+        self.__append_history(result)
+        if self.__perf_log:
+            elapsed_ms = (time.perf_counter() - start) * 1000
+            print(
+                f"[perf] llm_chat_ms={elapsed_ms:.1f} "
+                f"history_entries={len(self.__history_entries)} "
+                f"history_chars={len(self.__chat_history)}"
+            )
         return result
 
     #Getters:

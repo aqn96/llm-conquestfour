@@ -1,5 +1,6 @@
 import sys
 import os
+import time
 from ui.connect4board import Connect4Board
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QLabel, QVBoxLayout, QHBoxLayout, QWidget,
@@ -7,7 +8,6 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtGui import QPixmap, QFont, QAction
 from PyQt6.QtCore import Qt, QTimer
-from ai.ollama.llama_bot import LLMBot
 from game.thermal_aware_ai import ThermalAwareAI
 from speech_to_text.audio_recorder import AudioRecorder
 from speech_to_text.speech_to_text import SpeechToText
@@ -20,6 +20,7 @@ class Connect4GameWindow(QMainWindow):
         self.start_window = start_window
         self.temperatureAI = ThermalAwareAI()
         self.event = ""
+        self.perf_log = os.getenv("CONQUEST4_PERF_LOG", "1") != "0"
         self.initUI()
         
 
@@ -168,10 +169,14 @@ class Connect4GameWindow(QMainWindow):
         """ ✅ Update event when a move is made """
         self.event = move_score
         print(f"Updated Event: {self.event}")  # debugging
+        start = time.perf_counter()
         try:
             bot_reply = self.bot.get_response_to_speech(f"Player makes a {self.event} move!")
         except Exception as exc:
             bot_reply = f"Bot error while reacting to move: {exc}"
+        if self.perf_log:
+            elapsed_ms = (time.perf_counter() - start) * 1000
+            print(f"[perf] ui_event_to_llm_ms={elapsed_ms:.1f}")
         self.chat_display.append(bot_reply)
         self.chat_display.append(f"\n")
         self.chat_display.toPlainText()
@@ -189,10 +194,14 @@ class Connect4GameWindow(QMainWindow):
             self.chat_display.append(f"You: {user_input}")
             self.chat_input.clear()
             self.chat_display.append(f"\n")
+            start = time.perf_counter()
             try:
                 bot_reply = self.bot.get_response_to_speech(user_input)
             except Exception as exc:
                 bot_reply = f"Bot error while generating response: {exc}"
+            if self.perf_log:
+                elapsed_ms = (time.perf_counter() - start) * 1000
+                print(f"[perf] ui_chat_to_llm_ms={elapsed_ms:.1f}")
             self.chat_display.append(bot_reply)
             self.chat_display.append(f"\n")
 

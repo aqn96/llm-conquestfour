@@ -3,6 +3,7 @@ from PyQt6.QtCore import Qt, QEvent, pyqtSignal
 from PyQt6.QtGui import QMouseEvent
 import os
 import sys
+import time
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
@@ -27,7 +28,8 @@ class Connect4Board(QWidget):
             self.computer_player = MediumAI()
         else:
             self.computer_player = HardAI()
-        self.move_evaluator = MoveEvaluator()
+        self.move_evaluator = MoveEvaluator(evaluation_depth=3)
+        self.perf_log = os.getenv("CONQUEST4_PERF_LOG", "1") != "0"
         self.init_board()
 
     def init_board(self):
@@ -134,11 +136,20 @@ class Connect4Board(QWidget):
     
     def getMoveScore(self, col):
         """ Evaluate move score using MoveEvaluator """
-        return self.move_evaluator.evaluate_move(self.game_logic, col)
+        start = time.perf_counter()
+        score = self.move_evaluator.evaluate_move(self.game_logic, col)
+        if self.perf_log:
+            elapsed_ms = (time.perf_counter() - start) * 1000
+            print(f"[perf] minimax_eval_ms={elapsed_ms:.1f} quality={score} col={col}")
+        return score
     
     def computer_move(self):
         """ Computer moving piece into column"""
+        start = time.perf_counter()
         col = self.computer_player.find_best_move(self.game_logic)
+        if self.perf_log:
+            elapsed_ms = (time.perf_counter() - start) * 1000
+            print(f"[perf] minimax_ai_move_ms={elapsed_ms:.1f} col={col}")
         self.drop_piece(col)
         
     def check_board_state(self):

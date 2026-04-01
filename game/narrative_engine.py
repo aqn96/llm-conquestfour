@@ -19,12 +19,12 @@ class MoveEvaluator:
     mediocre, or bad, by comparing it to the optimal move the AI would make.
     """
     
-    def __init__(self, evaluation_depth=4):
+    def __init__(self, evaluation_depth=3):
         """
         Initialize the move evaluator.
         
         Args:
-            evaluation_depth (int): Depth for minimax evaluation (default: 4)
+            evaluation_depth (int): Depth for minimax evaluation (default: 3)
         """
         self.minimax_engine = MinimaxEngine(max_depth=evaluation_depth)
         
