@@ -17,7 +17,7 @@ The game features an intelligent AI opponent that not only challenges your strat
 
 - **Intelligent AI Opponent**: Three difficulty levels (Easy, Medium, Hard) with different play styles
 - **Narrative Generation**: LLM provides contextual commentary on moves using Mistral-7B
-- **🚀 Apple Neural Engine Acceleration**: ONNX Runtime with CoreML Execution Provider for 40-60% faster inference on Apple Silicon (M1/M2/M3)
+- **🍎 Apple Silicon Optimized Path**: Stable inference via Ollama + llama.cpp + Metal GPU backend (tested on Apple M3 Pro)
 - **Optimized Inference**: INT8 quantization for reduced latency and memory usage
 - **Thermal Management**: Automatically detects system temperature and scales AI operations
 - **Themed Experience**: Narratives adapt to different contextual themes (Western, Fantasy, Sci-Fi)
@@ -161,6 +161,21 @@ See [docs/baseline_performance.md](docs/baseline_performance.md) and [docs/lesso
 - This is the optimal stack for LLMs on Apple Silicon
 - Neural Engine (CoreML) is for vision/audio models only
 
+### Runtime Backend Selection
+
+The game now supports backend selection in the startup UI:
+
+- `Auto (Recommended)`: Uses stable Ollama + llama.cpp + Metal
+- `Ollama + Metal (Stable)`: Forces stable backend
+- `Apple NPU / CoreML (Experimental)`: Attempts ONNX/CoreML only when Apple M3 is detected, otherwise falls back to stable backend
+
+Notes:
+- Experimental NPU mode is for research and may be slower or less stable for LLM inference.
+- If ONNX/CoreML initialization fails, the app automatically falls back to stable Ollama/Metal.
+- Optional env vars for experimental mode:
+  - `CONQUEST4_ONNX_MODEL_PATH` (default: `models/mistral-onnx`)
+  - `CONQUEST4_USE_NEURAL_ENGINE` (`1` by default)
+
 **To Improve Performance**:
 
 1. **Use smaller model** (2-3x speedup):
@@ -175,6 +190,7 @@ See [docs/baseline_performance.md](docs/baseline_performance.md) and [docs/lesso
    ```
 
 See [docs/lessons_learned_onnx_coreml.md](docs/lessons_learned_onnx_coreml.md) for full technical analysis.
+For a deeper practical explanation, see [docs/onnx_coreml_deep_dive.md](docs/onnx_coreml_deep_dive.md).
 
 ## Planned Features
 
@@ -194,6 +210,10 @@ See [docs/lessons_learned_onnx_coreml.md](docs/lessons_learned_onnx_coreml.md) f
   - This is typically a PyQt callback exception path, not an ONNX/CoreML conversion problem.
   - A fix was applied for PyQt6 mouse event handling and unhandled bot-call exceptions in UI slots.
   - See [docs/pyqt_crash_fix_2026-03-31.md](docs/pyqt_crash_fix_2026-03-31.md) for root cause and patch details.
+- **Experimental NPU mode selected but not used**:
+  - This is expected unless Apple M3 is detected and ONNX/CoreML initializes successfully.
+  - The app falls back automatically to stable Ollama + llama.cpp + Metal.
+  - Check startup notice dialog and terminal logs for resolved backend.
 
 ### ONNX/CoreML Clarification
 

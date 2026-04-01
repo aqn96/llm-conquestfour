@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtGui import QFont, QPixmap, QAction
 from PyQt6.QtCore import Qt
-from ai.ollama.llama_bot import LLMBot
+from ai.runtime_selector import build_bot, backend_notice
 from ui.connect4_game_window import Connect4GameWindow
 
 
@@ -103,6 +103,20 @@ class Connect4IntroUI(QMainWindow):
         self.ai_dropdown.addItems(["Encouraging", "Snarky", "Aggressive", "Shy", "Love Struck"])
         self.ai_dropdown.setStyleSheet("color: black; background-color: white; font-size: 16px; height: 40px; width: 300px; padding: 5px;")
 
+        self.backend_label = QLabel("Inference Backend:", self)
+        self.backend_label.setFont(QFont("Arial", 20))
+        self.backend_label.setStyleSheet("color: black; background-color: lightgray; padding: 5px; border-radius: 5px;")
+
+        self.backend_dropdown = QComboBox(self)
+        self.backend_dropdown.addItems(
+            [
+                "Auto (Recommended)",
+                "Ollama + Metal (Stable)",
+                "Apple NPU / CoreML (Experimental)",
+            ]
+        )
+        self.backend_dropdown.setStyleSheet("color: black; background-color: white; font-size: 16px; height: 40px; width: 300px; padding: 5px;")
+
         self.start_button = QPushButton("Start Game", self)
         self.start_button.setStyleSheet("""
             QPushButton {
@@ -127,6 +141,8 @@ class Connect4IntroUI(QMainWindow):
         layout.addWidget(self.theme_dropdown)
         layout.addWidget(self.ai_label)
         layout.addWidget(self.ai_dropdown)
+        layout.addWidget(self.backend_label)
+        layout.addWidget(self.backend_dropdown)
         layout.addWidget(self.start_button)
 
         # Apply Layout to Central Widget
@@ -134,7 +150,14 @@ class Connect4IntroUI(QMainWindow):
 
     def init_bot(self, name, ai_personality, theme):
         """Initialize the Bot with different settings"""
-        self.bot = LLMBot("mistral", "Gemma", name, personality_key=ai_personality, occupation_key="Pikachu", setting_key=theme)
+        self.bot, _, _ = build_bot(
+            backend_choice="auto",
+            model_name="phi3:mini",
+            bot_name="Gemma",
+            player_name=name,
+            personality_key=ai_personality,
+            setting_key=theme,
+        )
 
     def start_game(self):
         """ Collects user input and starts the game """
@@ -142,10 +165,27 @@ class Connect4IntroUI(QMainWindow):
         difficulty = self.difficulty_dropdown.currentText()
         theme = self.theme_dropdown.currentText()
         ai_personality = self.ai_dropdown.currentText()
+        backend_choice_ui = self.backend_dropdown.currentText()
+        backend_choice = "auto"
+        if backend_choice_ui == "Ollama + Metal (Stable)":
+            backend_choice = "ollama"
+        elif backend_choice_ui == "Apple NPU / CoreML (Experimental)":
+            backend_choice = "npu_experimental"
 
         print(f"Starting game with:\nName: {name}\nDifficulty: {difficulty}\nTheme: {theme}\nAI Personality: {ai_personality}")
 
-        bot = LLMBot("phi3:mini","Gemma",name,personality_key=ai_personality,occupation_key="Teacher",setting_key=theme)
+        bot, resolved_backend, hardware_profile = build_bot(
+            backend_choice=backend_choice,
+            model_name="phi3:mini",
+            bot_name="Gemma",
+            player_name=name,
+            personality_key=ai_personality,
+            setting_key=theme,
+        )
+        title, notice = backend_notice(resolved_backend, hardware_profile)
+        print(f"Backend selection => requested={backend_choice} resolved={resolved_backend} hardware={hardware_profile}")
+        QMessageBox.information(self, title, notice)
+
         self.window2 = Connect4GameWindow(bot, difficulty, self)
         self.window2.show()
         self.close()
